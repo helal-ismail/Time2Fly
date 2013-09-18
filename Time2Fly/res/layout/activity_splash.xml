@@ -1,0 +1,31 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    android:id="@+id/parent" >
+
+    <ImageView
+        android:layout_margin="5dp"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:src="@drawable/splash" />
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1">
+
+        <TextView
+            android:gravity="center"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:padding="5dp"
+            android:text="Nowadays, civil aviation aircrafts are evolving to use satellite-based technology as the primary means of communication, navigation and surveillance. Their positions can be tracked accurately using messages broadcasting from aircrafts every second. The technology is known as Automatic Dependent Surveillance-Broadcast (ADS-B)"
+            android:textColor="@android:color/black"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+    </ScrollView>
+
+</LinearLayout>

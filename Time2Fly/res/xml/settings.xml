@@ -1,0 +1,41 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory
+        android:key="general_settings"
+        android:title="General Settings" >
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="home_as_hk"
+            android:summary="Instead use my current location"
+            android:title="Use HongKong Airport as home location" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="weather_enabled"
+            android:title="Enable Weather overlay" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="weather_settings"
+        android:title="Weather Overlay Settings" >
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:dependency="weather_enabled"
+            android:disableDependentsState="true"
+            android:key="weather_auto_update"
+            android:summary="Instead use a predefined timer"
+            android:title="Automated weather overlay update" />
+
+        <ListPreference
+            android:key="weather_auto_update_rate"
+            android:dependency="weather_auto_update"
+            android:entries="@array/intervalsAlias"
+            android:entryValues="@array/intervalsVals"
+            android:title="Set timer interval" />
+        <ListPreference
+            android:key="overlay_transparency"
+            android:dependency="weather_enabled"
+            android:entries="@array/transparencyAlias"
+            android:entryValues="@array/transparencyVals"
+            android:title="Overlay Transparency" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
