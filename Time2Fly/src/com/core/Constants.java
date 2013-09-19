@@ -22,4 +22,18 @@ public class Constants {
 	public static String ST_WEATHER_AUTO_UPDATE_RATE = "weather_auto_update_rate";
 	public static String ST_OVERLAY_TRANSPARENCY = "overlay_transparency";	
 	public static String IS_FIRST_TIME = "is_first_time";
+	
+	  //==== Twitter API =====
+    public static String TWITTER_CONSUMER_KEY = "fsa2F7hImgHfcv1NpV8w";
+    public static String TWITTER_CONSUMER_SECRET = "EqLLW9M4hy3DDDP5tyjqmYtR5Mi8LTV5Ov1sjhG6C4";
+    public static String TWITTER_PREFERENCE_NAME = "twitter_oauth";
+    public static final String PREF_KEY_OAUTH_TOKEN = "oauth_token";
+    public static final String PREF_KEY_OAUTH_SECRET = "oauth_token_secret";
+    public static final String PREF_KEY_TWITTER_LOGIN = "isTwitterLogedIn";
+    public static final String TWITTER_CALLBACK_URL = "oauth://time2fly";
+    public static final String URL_TWITTER_AUTH = "auth_url";
+    public static final String URL_TWITTER_OAUTH_VERIFIER = "oauth_verifier";
+    public static final String URL_TWITTER_OAUTH_TOKEN = "oauth_token";
+    public static final String TWITTER_IS_LOGGED_IN = "twitter_logged_in";
+    public static final String TW_LOGIN_PARAMS = "tw_login_params";
 }

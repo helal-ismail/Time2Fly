@@ -1,27 +1,56 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/parent"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@android:color/white"
-    android:orientation="horizontal"
-    android:id="@+id/parent" >
+    android:orientation="horizontal" >
 
     <ImageView
-        android:layout_margin="5dp"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:layout_margin="5dp"
         android:layout_weight="1"
         android:src="@drawable/splash" />
 
-    
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:orientation="vertical" >
+
         <TextView
-            android:layout_weight="1"
-            android:gravity="center"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:gravity="center"
             android:padding="5dp"
             android:text="Nowadays, civil aviation aircrafts are evolving to use satellite-based technology as the primary means of communication, navigation and surveillance. Their positions can be tracked accurately using messages broadcasting from aircrafts every second. The technology is known as Automatic Dependent Surveillance-Broadcast (ADS-B)"
             android:textColor="@android:color/black"
             android:textSize="15sp"
             android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/fb_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/rounded_border"
+            android:orientation="horizontal" >
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@drawable/fb_logo" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="login using Facebook"
+                android:textColor="@android:color/black"
+                android:textSize="20sp" />
+        </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>

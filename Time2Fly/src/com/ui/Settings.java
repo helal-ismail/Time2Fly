@@ -1,11 +1,11 @@
 package com.ui;
 
-import com.bugsense.trace.BugSenseHandler;
-
 import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
+
+import com.bugsense.trace.BugSenseHandler;
 
 public class Settings extends PreferenceActivity {
 	

@@ -3,6 +3,7 @@ package com.core;
 import android.graphics.Bitmap;
 import android.location.Location;
 
+import com.facebook.android.Facebook;
 import com.google.android.gms.maps.model.GroundOverlay;
 import com.modules.MyHash;
 import com.modules.Tab;
@@ -45,9 +46,13 @@ public class CacheManager {
 		}
 		t.cycles = cyclesCount;
 		tabs_hash.put(t.addr, t);
+	
 	}
 	
-	
+    
+    public Facebook facebook;
+    
+
 
 	
 }

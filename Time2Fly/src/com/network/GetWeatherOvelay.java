@@ -14,7 +14,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import android.os.AsyncTask;
 import android.os.Environment;
-import android.provider.ContactsContract.Directory;
 import android.util.Log;
 
 import com.core.Constants;

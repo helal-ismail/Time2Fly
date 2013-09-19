@@ -1,6 +1,5 @@
 package com.modules;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 public class Weather {
