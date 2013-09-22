@@ -1,0 +1,16 @@
+P1
+
+1 - web queried image
+2 - weatheroverlay
+3 - time stamp
+4 - ETA
+5 - Icons relative size
+6 - splash
+7 - weather zoom
+========================================
+
+P2
+
+1 - Social login
+2 - Social share
+3 - Search

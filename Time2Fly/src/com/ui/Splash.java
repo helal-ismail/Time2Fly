@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -51,10 +52,23 @@ public class Splash extends Activity implements OnClickListener {
 			break;
 		}
 
-		initFacebook(savedInstanceState);
-		fbLogin = (LinearLayout) findViewById(R.id.fb_login);
-		fbLogin.setOnClickListener(this);
+		//initFacebook(savedInstanceState);
+		//fbLogin = (LinearLayout) findViewById(R.id.fb_login);
+		//fbLogin.setOnClickListener(this);
+	
+		Runnable r = new Runnable() {
+			@Override
+			public void run() {
+				Intent intent = new Intent(mContext, Home.class);
+				startActivity(intent);
+				finish();
+			}
+		};
+		Handler handler = new Handler();
+		handler.postDelayed(r, 1500);
 	}
+	
+	
 
 	@Override
 	public void onClick(View v) {
