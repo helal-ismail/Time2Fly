@@ -603,11 +603,34 @@ public class Home extends FragmentActivity {
 	private void updateDetailedView(final Tab t, String distance) {
 		back.setText(cache.num_targets + " Flights Tracked");
 
+		
+		float speed_in_km = t.spd * (float)1.852;
+		Location loc = new Location("t2f");
+		loc.setAltitude(t.alt);
+		loc.setLatitude(t.lat);
+		loc.setLongitude(t.lon);
+		loc.setSpeed(speed_in_km);
+		float dist = loc.distanceTo(cache.currentLoc)/1000;
+		
+		float time = dist/speed_in_km;
+		float mins = (time % 1);
+		int hrs = (int)(time - mins);
+		
+		mins = mins * 60;
+		float sec = mins % 60;
+		int minutes = (int)(mins - sec);
+		
+		sec = sec * 60;
+		int seconds = (int)sec;
+		
+		String ETA = "ETA " + hrs + " : " + minutes + " : " + seconds;
+		
 		TextView tv = (TextView) drawer2.getChildAt(1);
 		String info = t.callSign + "\n" + t.spd + " Kts" + "\n" + t.vspd
-				+ " ft/min \n" + t.track + "¡" + "\n" + t.owner + "\n"
+				+ " ft/min \n" + t.track + "ï¿½" + "\n" + t.owner + "\n"
 				+ distance + "\n" + "SQ : " + t.sqw + "\n" + "Radar ID : "
-				+ t.user_id + "\n";
+				+ t.user_id + "\n"
+				+ETA;
 		tv.setText(info);
 
 		// LatLng latLng = new LatLng(t.lat, t.lon);

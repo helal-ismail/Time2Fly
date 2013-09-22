@@ -195,7 +195,7 @@ public class Splash extends Activity implements OnClickListener {
 		}
 	};
 
-	public void onStart() {
+	/*public void onStart() {
 		super.onStart();
 		Session.getActiveSession().addCallback(statusCallback);
 	}
@@ -212,6 +212,6 @@ public class Splash extends Activity implements OnClickListener {
 		Session.getActiveSession().onActivityResult(this, requestCode,
 				resultCode, data);
 
-	}
+	}*/
 
 }
