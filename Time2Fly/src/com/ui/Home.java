@@ -289,15 +289,14 @@ public class Home extends FragmentActivity {
 
 			float distance = loc.distanceTo(cache.currentLoc) / 1000;
 			distance = (float) (Math.round(distance * 20.0) / 20.0);
-			String snippet = tab.type + "  " + tab.spd + "Kts" + " "
-					+ Utils.getInstance().getVSPD(tab.vspd);
+			String snippet = tab.type + "  " + tab.spd + "Kts" ;
 
 			String dist = distance + "Km  " + direction;
 
 			if (tab.marker == null) {
 				tab.marker = googleMap.addMarker(new MarkerOptions()
 						.position(latLng).anchor((float) 0.5, (float) 0.5)
-						.title(tab.callSign + " " + flightLevel)
+						.title(tab.callSign + " " + flightLevel + " " + Utils.getInstance().getVSPD(tab.vspd))
 						.snippet(snippet)
 						.icon(BitmapDescriptorFactory.fromBitmap(bmp)));
 			} else {
@@ -613,21 +612,15 @@ public class Home extends FragmentActivity {
 		float dist = loc.distanceTo(cache.currentLoc)/1000;
 		
 		float time = dist/speed_in_km;
-		float mins = (time % 1);
-		int hrs = (int)(time - mins);
-		
+		float mins = (time % 1);		
 		mins = mins * 60;
-		float sec = mins % 60;
-		int minutes = (int)(mins - sec);
+		int minutes = (int)Math.floor(mins);
 		
-		sec = sec * 60;
-		int seconds = (int)sec;
-		
-		String ETA = "ETA " + hrs + " : " + minutes + " : " + seconds;
+		String ETA = "ETA : " + minutes + " minutes";
 		
 		TextView tv = (TextView) drawer2.getChildAt(1);
 		String info = t.callSign + "\n" + t.spd + " Kts" + "\n" + t.vspd
-				+ " ft/min \n" + t.track + "�" + "\n" + t.owner + "\n"
+				+ " ft/min \n" + t.track + "°" + "\n" + t.owner + "\n"
 				+ distance + "\n" + "SQ : " + t.sqw + "\n" + "Radar ID : "
 				+ t.user_id + "\n"
 				+ETA;
