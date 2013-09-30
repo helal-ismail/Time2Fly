@@ -3,7 +3,8 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@android:color/white"
-    android:orientation="horizontal" >
+    android:orientation="horizontal"
+    android:gravity="center" >
 
     <ImageView
         android:layout_width="fill_parent"
@@ -16,7 +17,8 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_weight="1"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:gravity="center" >
 
         <TextView
             android:layout_width="fill_parent"
@@ -49,7 +51,7 @@
                 android:layout_margin="10dp"
                 android:text="login using Facebook"
                 android:textColor="@android:color/black"
-                android:textSize="20sp" />
+                android:textSize="15sp" />
         </LinearLayout>
     </LinearLayout>
 

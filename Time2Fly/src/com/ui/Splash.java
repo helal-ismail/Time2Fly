@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.bugsense.trace.BugSenseHandler;
 import com.core.CacheManager;
@@ -43,7 +44,7 @@ public class Splash extends Activity implements OnClickListener {
 		BugSenseHandler.initAndStartSession(mContext, "c417ebfa");
 		appInstance = (Time2FlyApp) getApplication();
 
-		switch (getWindowManager().getDefaultDisplay().getOrientation()) {
+		switch (getResources().getConfiguration().orientation) {
 		case Configuration.ORIENTATION_LANDSCAPE:
 			setContentView(R.layout.activity_splash2);
 			break;
@@ -52,20 +53,20 @@ public class Splash extends Activity implements OnClickListener {
 			break;
 		}
 
-		//initFacebook(savedInstanceState);
-		//fbLogin = (LinearLayout) findViewById(R.id.fb_login);
-		//fbLogin.setOnClickListener(this);
+		initFacebook(savedInstanceState);
+		fbLogin = (LinearLayout) findViewById(R.id.fb_login);
+		fbLogin.setOnClickListener(this);
 	
-		Runnable r = new Runnable() {
-			@Override
-			public void run() {
-				Intent intent = new Intent(mContext, Home.class);
-				startActivity(intent);
-				finish();
-			}
-		};
-		Handler handler = new Handler();
-		handler.postDelayed(r, 1500);
+//		Runnable r = new Runnable() {
+//			@Override
+//			public void run() {
+//				Intent intent = new Intent(mContext, Home.class);
+//				startActivity(intent);
+//				finish();
+//			}
+//		};
+//		Handler handler = new Handler();
+//		handler.postDelayed(r, 1500);
 	}
 	
 	
@@ -144,50 +145,22 @@ public class Splash extends Activity implements OnClickListener {
 
 				Request.executeMeRequestAsync(session,
 						new Request.GraphUserCallback() {
-
-							public void onCompleted(GraphUser user,
-									Response response) {
-
-								try {
+							public void onCompleted(GraphUser user,Response response) {
+								try 
+								{	
 									fbLoginDialog.dismiss();
 									fbLoginDialog = null;
-								} catch (Exception e) {
-
 								}
+								catch (Exception e) {
+									// do nothing
+								}
+								
 								if (response != null) {
-									// do something with <response> now
-									try {
-										String userID = user.getId();
-										String name = user.getName();
-										String profileURL = user.getLink();
-										String uName = user.getUsername();
-										if (uName == null
-												|| uName.equalsIgnoreCase(""))
-											uName = userID;
-
-										String provider = "facebook";
-										String email = (String) user
-												.getProperty("email");
-										JSONObject obj = user
-												.getInnerJSONObject();
-
-										// LoginTask task = new LoginTask();
-										// task.execute();
-
-										Intent homeIntent;
-										homeIntent = new Intent(mContext,
-												Home.class);
+										Intent homeIntent = new Intent(mContext,Home.class);
 										startActivity(homeIntent);
 										finish();
-
-									} catch (Exception e) {
-										e.printStackTrace();
-										Log.d("social_login", "Exception e");
-
-									}
-								} else {
-									Log.d("social_login", "response null");
-
+									} else {
+										Toast.makeText(mContext, "Facebook login failed", Toast.LENGTH_LONG).show();
 								}
 							}
 						});
@@ -195,7 +168,7 @@ public class Splash extends Activity implements OnClickListener {
 		}
 	};
 
-	/*public void onStart() {
+	public void onStart() {
 		super.onStart();
 		Session.getActiveSession().addCallback(statusCallback);
 	}
@@ -212,6 +185,6 @@ public class Splash extends Activity implements OnClickListener {
 		Session.getActiveSession().onActivityResult(this, requestCode,
 				resultCode, data);
 
-	}*/
+	}
 
 }

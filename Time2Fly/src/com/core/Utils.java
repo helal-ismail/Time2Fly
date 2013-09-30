@@ -214,13 +214,59 @@ public class Utils {
 	}
 	
 	public float getDistance(Tab target, Location toLoc){
-		LatLng latLng = new LatLng(target.lat, target.lon);
 		Location loc = new Location("t2f");
-		loc.setLatitude(latLng.latitude);
-		loc.setLongitude(latLng.longitude);
+		loc.setAltitude(target.alt);
+		loc.setLatitude(target.lat);
+		loc.setLongitude(target.lon);
 		float distance = loc.distanceTo(toLoc) / 1000;
 		return distance;
 	}
+	
+	public String getWeatherOverlayDir(float zoomLevel){
+		if (zoomLevel > 12)
+			return "64";
+		else if (zoomLevel > 10)
+			return "128";
+		else
+			return "256";
+	}
+	
+	
+	public boolean showETA(float bearing, String direction){
+		
+		String bearingDir = getDirectionFromAngle(bearing);
+		boolean result = false;
+		
+		if (direction.equalsIgnoreCase("N") && bearingDir.equalsIgnoreCase("S"))
+			result = true;
+		
+		else if (direction.equalsIgnoreCase("S") && bearingDir.equalsIgnoreCase("N"))
+			result = true;
+		
+		else if (direction.equalsIgnoreCase("E") && bearingDir.equalsIgnoreCase("W"))
+			result = true;
+		
+		else if (direction.equalsIgnoreCase("W") && bearingDir.equalsIgnoreCase("E"))
+			result = true;
+		
+		else if (direction.equalsIgnoreCase("NE") && bearingDir.equalsIgnoreCase("SW"))
+			result = true;
+		
+		else if (direction.equalsIgnoreCase("NW") && bearingDir.equalsIgnoreCase("SE"))
+			result = true;
+		
+		else if (direction.equalsIgnoreCase("SE") && bearingDir.equalsIgnoreCase("NW"))
+			result = true;
+		
+		else if (direction.equalsIgnoreCase("SW") && bearingDir.equalsIgnoreCase("NE"))
+			result = true;
+		
+		return result;
+		
+	}
+	
+	
+	
 	
 	
 }

@@ -1,7 +1,7 @@
 P1
 
 1 - web queried image
-2 - weatheroverlay
+2 - weather overlay
 3 - time stamp
 4 - ETA
 5 - Icons relative size

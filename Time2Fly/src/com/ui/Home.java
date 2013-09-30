@@ -556,7 +556,8 @@ public class Home extends FragmentActivity {
 			root.mkdir();
 			File appDir = new File(root, "Time2Fly");
 			appDir.mkdir();
-			File dir = new File(appDir, "256");
+			String dirName = Utils.getInstance().getWeatherOverlayDir(googleMap.getCameraPosition().zoom);
+			File dir = new File(appDir, dirName);
 			dir.mkdir();
 			final File[] files = dir.listFiles();
 			TimerTask task = new TimerTask() {
@@ -617,13 +618,19 @@ public class Home extends FragmentActivity {
 		int hrs = (int)(time - mins);
 		
 		mins = mins * 60;
-		float sec = mins % 60;
+		float sec = mins % 1;
 		int minutes = (int)(mins - sec);
 		
 		sec = sec * 60;
 		int seconds = (int)sec;
+		String ETA = "ETA : --";
 		
-		String ETA = "ETA " + hrs + " : " + minutes + " : " + seconds;
+		String direction = "";
+		if(distance.split(" ").length > 1)
+		direction = distance.split(" ")[1];
+		
+		if(Utils.getInstance().showETA(t.track, direction));
+			ETA = "ETA " + hrs + " : " + minutes + " : " + seconds;
 		
 		TextView tv = (TextView) drawer2.getChildAt(1);
 		String info = t.callSign + "\n" + t.spd + " Kts" + "\n" + t.vspd

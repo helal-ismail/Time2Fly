@@ -1,22 +1,27 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/parent"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@android:color/white"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:padding="10dp" >
 
     <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:id="@+id/logo"
+        android:layout_width="400dp"
+        android:layout_height="400dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:layout_margin="5dp"
-        android:layout_weight="1"
-        android:src="@drawable/splash" />
+        android:background="@drawable/splash" />
 
     <TextView
+        android:gravity="center_horizontal"
+        android:id="@+id/text"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="5"
-        android:gravity="top|center_horizontal"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/logo"
+        android:layout_centerHorizontal="true"
         android:padding="5dp"
         android:text="Nowadays, civil aviation aircrafts are evolving to use satellite-based technology as the primary means of communication, navigation and surveillance. Their positions can be tracked accurately using messages broadcasting from aircrafts every second. The technology is known as Automatic Dependent Surveillance-Broadcast (ADS-B)"
         android:textColor="@android:color/black"
@@ -27,6 +32,8 @@
         android:id="@+id/fb_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/text"
+        android:layout_centerHorizontal="true"
         android:layout_gravity="center_horizontal"
         android:layout_margin="10dp"
         android:background="@drawable/rounded_border"
@@ -47,4 +54,4 @@
             android:textSize="20sp" />
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>
