@@ -25,10 +25,6 @@
         android:icon="@drawable/gear"
         android:showAsAction="always"
         android:title="Settings"/>
-    <item
-        android:id="@+id/side_panel"
-        android:icon="@drawable/panel"
-        android:showAsAction="always"
-        android:title="Side panel"/>
+ 
 
 </menu>

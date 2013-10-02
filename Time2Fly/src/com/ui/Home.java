@@ -94,14 +94,34 @@ public class Home extends FragmentActivity {
 			task.execute();
 		}
 	};
+	
+	
+	private void initUI(){
+		setContentView(R.layout.activity_home);
+		int width = getWindowManager().getDefaultDisplay().getWidth();
+		LinearLayout leftSection = (LinearLayout)findViewById(R.id.left_section);
+		leftSection.getLayoutParams().width = width / 4 ;
+		
+		Button sideTray = (Button)findViewById(R.id.side_tray);
+		sideTray.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				View parent = (View)(drawer.getParent()).getParent();
+				if (parent.getVisibility() == View.GONE)
+					parent.setVisibility(View.VISIBLE);
+				else
+					parent.setVisibility(View.GONE);
+			}
+		});
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// ======= Init App =======
 		super.onCreate(savedInstanceState);
 		BugSenseHandler.initAndStartSession(mContext, "c417ebfa");
+		initUI();
 		timer = new Timer();
-		setContentView(R.layout.activity_home);
 		cache.tabs_hash.clear();
 		initActionBar();
 		drawer = (LinearLayout) findViewById(R.id.drawer);
@@ -380,14 +400,6 @@ public class Home extends FragmentActivity {
 			finish();
 			Intent settings = new Intent(mContext, Settings.class);
 			startActivity(settings);
-			break;
-
-		case R.id.side_panel:
-			View parent = ((View) drawer.getParent());
-			if (parent.getVisibility() == View.GONE)
-				parent.setVisibility(View.VISIBLE);
-			else
-				parent.setVisibility(View.GONE);
 			break;
 
 		case R.id.play:
