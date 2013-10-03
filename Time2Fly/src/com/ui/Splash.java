@@ -3,18 +3,15 @@ package com.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -36,47 +33,74 @@ public class Splash extends Activity implements OnClickListener {
 	Time2FlyApp appInstance;
 	ProgressDialog fbLoginDialog = null;
 	LinearLayout fbLogin;
+	LinearLayout guestLogin;
+	Bundle savedInst;
 	CacheManager cache = CacheManager.getInstance();
+
+	private void initUI() {
+		int height = getWindowManager().getDefaultDisplay().getHeight();
+
+		switch (getResources().getConfiguration().orientation) {
+		case Configuration.ORIENTATION_LANDSCAPE:
+			setContentView(R.layout.activity_splash2);
+			ImageView logo = (ImageView) findViewById(R.id.logo);
+			logo.getLayoutParams().height = (int) (0.9 * height);
+			logo.getLayoutParams().width = (int) (0.9 * height);
+
+			break;
+		default:
+			setContentView(R.layout.activity_splash);
+			logo = (ImageView) findViewById(R.id.logo);
+			logo.getLayoutParams().height = (int) (0.4 * height);
+			logo.getLayoutParams().width = (int) (0.4 * height);
+
+			break;
+		}
+
+
+		
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		BugSenseHandler.initAndStartSession(mContext, "c417ebfa");
+		initUI();
 		appInstance = (Time2FlyApp) getApplication();
-
-		switch (getResources().getConfiguration().orientation) {
-		case Configuration.ORIENTATION_LANDSCAPE:
-			setContentView(R.layout.activity_splash2);
-			break;
-		default:
-			setContentView(R.layout.activity_splash);
-			break;
-		}
-
-		initFacebook(savedInstanceState);
+		savedInst = savedInstanceState;
 		fbLogin = (LinearLayout) findViewById(R.id.fb_login);
 		fbLogin.setOnClickListener(this);
-	
-//		Runnable r = new Runnable() {
-//			@Override
-//			public void run() {
-//				Intent intent = new Intent(mContext, Home.class);
-//				startActivity(intent);
-//				finish();
-//			}
-//		};
-//		Handler handler = new Handler();
-//		handler.postDelayed(r, 1500);
+
+		guestLogin = (LinearLayout) findViewById(R.id.guest_login);
+		guestLogin.setOnClickListener(this);
+
+		// Runnable r = new Runnable() {
+		// @Override
+		// public void run() {
+		// Intent intent = new Intent(mContext, Home.class);
+		// startActivity(intent);
+		// finish();
+		// }
+		// };
+		// Handler handler = new Handler();
+		// handler.postDelayed(r, 1500);
 	}
-	
-	
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.fb_login:
+			initFacebook(savedInst);
+
 			onClickLogin();
 			break;
+
+		case R.id.guest_login:
+			Intent intent = new Intent(mContext, Home.class);
+			startActivity(intent);
+			finish();
+			break;
+
 		default:
 			break;
 		}
@@ -145,22 +169,24 @@ public class Splash extends Activity implements OnClickListener {
 
 				Request.executeMeRequestAsync(session,
 						new Request.GraphUserCallback() {
-							public void onCompleted(GraphUser user,Response response) {
-								try 
-								{	
+							public void onCompleted(GraphUser user,
+									Response response) {
+								try {
 									fbLoginDialog.dismiss();
 									fbLoginDialog = null;
-								}
-								catch (Exception e) {
+								} catch (Exception e) {
 									// do nothing
 								}
-								
+
 								if (response != null) {
-										Intent homeIntent = new Intent(mContext,Home.class);
-										startActivity(homeIntent);
-										finish();
-									} else {
-										Toast.makeText(mContext, "Facebook login failed", Toast.LENGTH_LONG).show();
+									Intent homeIntent = new Intent(mContext,
+											Home.class);
+									startActivity(homeIntent);
+									finish();
+								} else {
+									Toast.makeText(mContext,
+											"Facebook login failed",
+											Toast.LENGTH_LONG).show();
 								}
 							}
 						});
@@ -170,20 +196,20 @@ public class Splash extends Activity implements OnClickListener {
 
 	public void onStart() {
 		super.onStart();
-		Session.getActiveSession().addCallback(statusCallback);
+		//Session.getActiveSession().addCallback(statusCallback);
 	}
 
 	@Override
 	public void onStop() {
 		super.onStop();
-		Session.getActiveSession().removeCallback(statusCallback);
+		if (Session.getActiveSession() != null)
+			Session.getActiveSession().removeCallback(statusCallback);
 	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		Session.getActiveSession().onActivityResult(this, requestCode,
-				resultCode, data);
+		Session.getActiveSession().onActivityResult(this, requestCode,resultCode, data);
 
 	}
 

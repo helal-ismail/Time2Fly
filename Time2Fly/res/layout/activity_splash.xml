@@ -16,12 +16,12 @@
         android:background="@drawable/splash" />
 
     <TextView
-        android:gravity="center_horizontal"
         android:id="@+id/text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/logo"
         android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
         android:padding="5dp"
         android:text="Nowadays, civil aviation aircrafts are evolving to use satellite-based technology as the primary means of communication, navigation and surveillance. Their positions can be tracked accurately using messages broadcasting from aircrafts every second. The technology is known as Automatic Dependent Surveillance-Broadcast (ADS-B)"
         android:textColor="@android:color/black"
@@ -29,29 +29,64 @@
         android:textStyle="bold" />
 
     <LinearLayout
-        android:id="@+id/fb_login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_below="@+id/text"
         android:layout_centerHorizontal="true"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="10dp"
-        android:background="@drawable/rounded_border"
-        android:orientation="horizontal" >
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
 
-        <Button
+        <LinearLayout
+            android:layout_marginRight="20dp"
+            android:id="@+id/fb_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_margin="10dp"
-            android:background="@drawable/fb_logo" />
+            android:background="@drawable/rounded_border"
+            android:orientation="horizontal" >
 
-        <TextView
+            <Button
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/fb_logo" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="Facebook login"
+                android:textColor="@android:color/black"
+                android:textSize="20sp" />
+        </LinearLayout>
+        
+        
+        
+         <LinearLayout
+            android:id="@+id/guest_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_margin="10dp"
-            android:text="login using Facebook"
-            android:textColor="@android:color/black"
-            android:textSize="20sp" />
+            android:background="@drawable/rounded_border"
+            android:orientation="horizontal" >
+
+            <Button
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/compass_mini" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="Guest login"
+                android:textColor="@android:color/black"
+                android:textSize="20sp" />
+        </LinearLayout>
+        
     </LinearLayout>
 
 </RelativeLayout>

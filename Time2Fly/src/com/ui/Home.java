@@ -78,7 +78,8 @@ public class Home extends FragmentActivity {
 
 	Button back;
 	LinearLayout exportLayout;
-
+	MyAnimations mAnimations;
+	
 	Runnable refreshValsRunnable = new Runnable() {
 		@Override
 		public void run() {
@@ -102,17 +103,21 @@ public class Home extends FragmentActivity {
 		LinearLayout leftSection = (LinearLayout)findViewById(R.id.left_section);
 		leftSection.getLayoutParams().width = width / 4 ;
 		
+		mAnimations = new MyAnimations(mContext);
+		
 		Button sideTray = (Button)findViewById(R.id.side_tray);
 		sideTray.setOnClickListener(new OnClickListener() {
 			@Override
-			public void onClick(View arg0) {
+			public void onClick(View view) {
 				View parent = (View)(drawer.getParent()).getParent();
 				if (parent.getVisibility() == View.GONE)
-					parent.setVisibility(View.VISIBLE);
+					mAnimations.showRightPanel(parent, view);
 				else
-					parent.setVisibility(View.GONE);
+					mAnimations.hideRightPanel(parent, view);
 			}
 		});
+		
+		
 	}
 
 	@Override
