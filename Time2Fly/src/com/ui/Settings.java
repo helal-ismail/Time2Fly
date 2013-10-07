@@ -1,7 +1,6 @@
 package com.ui;
 
 import android.app.ActionBar;
-import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 
@@ -23,8 +22,6 @@ public class Settings extends PreferenceActivity {
 	@Override
 	public void onBackPressed() {
 		finish();
-		Intent home = new Intent(this, Home.class);
-		startActivity(home);
 	}
 
 }

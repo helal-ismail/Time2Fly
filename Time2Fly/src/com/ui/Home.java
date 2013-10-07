@@ -63,6 +63,7 @@ public class Home extends FragmentActivity {
 	int bearing_angle = 0;
 	boolean started = false;
 	Timer timer;
+	Timer weatherTimer;
 	public int round_robin = 0;
 	GoogleMap googleMap;
 	Bitmap weather_bmp;
@@ -126,7 +127,6 @@ public class Home extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		BugSenseHandler.initAndStartSession(mContext, "c417ebfa");
 		initUI();
-		timer = new Timer();
 		cache.tabs_hash.clear();
 		initActionBar();
 		drawer = (LinearLayout) findViewById(R.id.drawer);
@@ -148,7 +148,6 @@ public class Home extends FragmentActivity {
 
 		// Init Weather Task
 		if (appInstance.isWeatheroverlayEnabled()) {
-			// timer.schedule(weatherTask, 0, 12 * 60 * 1000);
 			WeatherTask task = new WeatherTask();
 			task.execute();
 		}
@@ -297,7 +296,10 @@ public class Home extends FragmentActivity {
 			if (alt >= 100) {
 				flightLevel = "FL" + altitude;
 			} else {
-				flightLevel = "A0" + altitude;
+				if (altitude > 10)
+					flightLevel = "A0" + altitude;
+				else
+					flightLevel = "A00" + altitude;
 			}
 
 			Location loc = new Location("t2f");
@@ -400,9 +402,14 @@ public class Home extends FragmentActivity {
 			break;
 
 		case R.id.settings:
+		
 			timer.cancel();
 			timer.purge();
-			finish();
+			
+			weatherTimer.cancel();
+			weatherTimer.purge();
+			
+//			finish();
 			Intent settings = new Intent(mContext, Settings.class);
 			startActivity(settings);
 			break;
@@ -561,6 +568,7 @@ public class Home extends FragmentActivity {
 					runOnUiThread(refreshValsRunnable);
 				}
 			};
+			timer = new Timer();
 			timer.schedule(task, cache.update_rate);
 		}
 	}
@@ -593,7 +601,8 @@ public class Home extends FragmentActivity {
 					runOnUiThread(playWeatherRunnable);
 				}
 			};
-			timer.scheduleAtFixedRate(task, 0, 2000);
+			weatherTimer = new Timer();
+			weatherTimer.scheduleAtFixedRate(task, 0, 2000);
 		}
 	}
 
@@ -726,5 +735,21 @@ public class Home extends FragmentActivity {
 			}
 		}
 	};
+
+	@Override
+	public void onConfigurationChanged(android.content.res.Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		int width = getWindowManager().getDefaultDisplay().getWidth();
+		LinearLayout leftSection = (LinearLayout)findViewById(R.id.left_section);
+		leftSection.getLayoutParams().width = width / 4 ;
+		
+	};
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		timer = new Timer();
+		weatherTimer = new Timer();
+	}
 
 }

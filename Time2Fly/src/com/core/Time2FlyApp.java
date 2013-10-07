@@ -65,6 +65,10 @@ public class Time2FlyApp extends Application {
 		return prefs.getBoolean(Constants.ST_WEATHER_AUTO_UPDATE, false);
 	}
 	
+	public boolean isSocialLoginEnabled(){
+		return prefs.getBoolean(Constants.ST_SOCIAL_ENABLED, false);
+	}
+	
 	public int getWeatheroverlayAutoupdateRate(){
 		String minutes = prefs.getString(Constants.ST_WEATHER_AUTO_UPDATE_RATE, "15");
 		int min = Integer.parseInt(minutes);

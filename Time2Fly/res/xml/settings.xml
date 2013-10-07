@@ -12,6 +12,12 @@
             android:defaultValue="false"
             android:key="weather_enabled"
             android:title="Enable Weather overlay" />
+        
+         <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="social_login_enabled"
+            android:title="Enable Social Login" />
+         
     </PreferenceCategory>
     <PreferenceCategory
         android:key="weather_settings"

@@ -22,6 +22,7 @@ public class Constants {
 	public static String ST_WEATHER_AUTO_UPDATE_RATE = "weather_auto_update_rate";
 	public static String ST_OVERLAY_TRANSPARENCY = "overlay_transparency";	
 	public static String IS_FIRST_TIME = "is_first_time";
+	public static String ST_SOCIAL_ENABLED = "social_login_enabled";
 	
 	  //==== Twitter API =====
     public static String TWITTER_CONSUMER_KEY = "fsa2F7hImgHfcv1NpV8w";

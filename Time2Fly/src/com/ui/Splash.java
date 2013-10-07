@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -56,9 +57,11 @@ public class Splash extends Activity implements OnClickListener {
 
 			break;
 		}
-
-
 		
+		fbLogin = (LinearLayout) findViewById(R.id.fb_login);
+		guestLogin = (LinearLayout) findViewById(R.id.guest_login);
+
+
 	}
 
 	@Override
@@ -67,23 +70,28 @@ public class Splash extends Activity implements OnClickListener {
 		BugSenseHandler.initAndStartSession(mContext, "c417ebfa");
 		initUI();
 		appInstance = (Time2FlyApp) getApplication();
-		savedInst = savedInstanceState;
-		fbLogin = (LinearLayout) findViewById(R.id.fb_login);
-		fbLogin.setOnClickListener(this);
 
-		guestLogin = (LinearLayout) findViewById(R.id.guest_login);
-		guestLogin.setOnClickListener(this);
+		if (!appInstance.isSocialLoginEnabled()) {
+			fbLogin.setVisibility(View.GONE);
+			guestLogin.setVisibility(View.GONE);
+			Runnable r = new Runnable() {
+				@Override
+				public void run() {
+					Intent intent = new Intent(mContext, Home.class);
+					startActivity(intent);
+					finish();
+				}
+			};
+			Handler handler = new Handler();
+			handler.postDelayed(r, 1500);
+		}
 
-		// Runnable r = new Runnable() {
-		// @Override
-		// public void run() {
-		// Intent intent = new Intent(mContext, Home.class);
-		// startActivity(intent);
-		// finish();
-		// }
-		// };
-		// Handler handler = new Handler();
-		// handler.postDelayed(r, 1500);
+		else {
+
+			fbLogin.setOnClickListener(this);
+			guestLogin.setOnClickListener(this);
+		}
+
 	}
 
 	@Override
@@ -196,7 +204,7 @@ public class Splash extends Activity implements OnClickListener {
 
 	public void onStart() {
 		super.onStart();
-		//Session.getActiveSession().addCallback(statusCallback);
+		// Session.getActiveSession().addCallback(statusCallback);
 	}
 
 	@Override
@@ -209,7 +217,8 @@ public class Splash extends Activity implements OnClickListener {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		Session.getActiveSession().onActivityResult(this, requestCode,resultCode, data);
+		Session.getActiveSession().onActivityResult(this, requestCode,
+				resultCode, data);
 
 	}
 
