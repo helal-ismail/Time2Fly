@@ -29,6 +29,7 @@ import android.view.View.OnClickListener;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -56,6 +57,7 @@ import com.modules.Tab;
 import com.network.GetDataTask;
 import com.network.GetWeatherOvelay;
 import com.network.MyLocationListener;
+import com.shared.SharedLayouts;
 
 public class Home extends FragmentActivity {
 	Time2FlyApp appInstance;
@@ -118,7 +120,27 @@ public class Home extends FragmentActivity {
 			}
 		});
 		
-		
+		SharedLayouts.searchBar = (LinearLayout)findViewById(R.id.search_bar);
+		Button searchButton = (Button)findViewById(R.id.search_button);
+		searchButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				
+				EditText searchField = (EditText)findViewById(R.id.search_field);
+				String callSign = searchField.getEditableText().toString();
+				Object[] tabs = cache.tabs_hash.search(callSign);
+				for(int i = 0 ; i < drawer.getChildCount() ; i ++)
+				{
+					for(int j = 0 ; j < tabs.length ; j ++){
+						Tab t = (Tab)tabs[j];
+						String tag = (String)drawer.getChildAt(i).getTag();
+						if(tag.equalsIgnoreCase(t.addr)){
+							drawer.getChildAt(i).setBackgroundResource(R.drawable.rounded_border_red);
+						}
+					}
+				}
+			}
+		});
 	}
 
 	@Override
@@ -430,6 +452,14 @@ public class Home extends FragmentActivity {
 				item.setIcon(d);
 			}
 			break;
+			
+			
+		case R.id.search:
+			if(SharedLayouts.searchBar.getVisibility() == View.VISIBLE)
+				SharedLayouts.searchBar.setVisibility(View.GONE);
+			else
+				SharedLayouts.searchBar.setVisibility(View.VISIBLE);
+			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -648,7 +678,7 @@ public class Home extends FragmentActivity {
 		
 		TextView tv = (TextView) drawer2.getChildAt(1);
 		String info = t.callSign + "\n" + t.spd + " Kts" + "\n" + t.vspd
-				+ " ft/min \n" + t.track + "¡" + "\n" + t.owner + "\n"
+				+ " ft/min \n" + t.track + "Â°" + "\n" + t.owner + "\n"
 				+ distance + "\n" + "SQ : " + t.sqw + "\n" + "Radar ID : "
 				+ t.user_id + "\n"
 				+ETA;

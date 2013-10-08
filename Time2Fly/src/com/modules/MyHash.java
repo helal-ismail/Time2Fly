@@ -1,5 +1,6 @@
 package com.modules;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -18,6 +19,19 @@ public class MyHash extends HashMap<String, Tab>{
 				return i;
 		}
 		return -1;
+	}
+	
+	
+	public Object[] search(String callSign){
+		Object[] array = values().toArray();
+		ArrayList<Tab> list = new ArrayList<Tab>();
+		for(int i = 0 ; i < array.length ; i ++)
+		{
+			Tab t = (Tab)array[i];
+			if(t.callSign.toLowerCase().contains(callSign.toLowerCase()))
+				list.add(t);
+		}
+		return list.toArray();
 	}
 	
 	public Object[] exportSortedList(){

@@ -25,6 +25,10 @@
         android:icon="@drawable/gear"
         android:showAsAction="always"
         android:title="Settings"/>
- 
+    <item
+        android:id="@+id/search"
+        android:icon="@drawable/search_icon"
+        android:showAsAction="always"
+        android:title="Search"/>
 
 </menu>
