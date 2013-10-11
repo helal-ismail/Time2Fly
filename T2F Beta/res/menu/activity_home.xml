@@ -1,0 +1,23 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <group android:menuCategory="container" >
+        <item
+            android:id="@+id/normal"
+            android:showAsAction="never"
+            android:title="Normal"/>
+        <item
+            android:id="@+id/sat"
+            android:showAsAction="never"
+            android:title="Satellite"/>
+        <item
+            android:id="@+id/ter"
+            android:showAsAction="never"
+            android:title="Terrain"/>
+    </group>
+    <item
+        android:id="@+id/settings"
+        android:icon="@drawable/gear"
+        android:showAsAction="always"
+        android:title="Settings"/>
+
+</menu>

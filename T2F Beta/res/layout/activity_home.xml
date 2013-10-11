@@ -10,7 +10,8 @@
         android:layout_above="@+id/bottom_bar"
         android:background="@drawable/side_panel"
         android:orientation="horizontal"
-        android:padding="10dp" >
+        android:padding="10dp"
+        android:visibility="gone" >
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -21,29 +22,29 @@
                 android:id="@+id/time_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:padding="5dp"
                 android:text="Time2Fly"
                 android:textColor="@android:color/black"
-                android:textSize="10sp"
-                android:padding="5dp" />
+                android:textSize="10sp" />
 
             <LinearLayout
-                android:visibility="gone"
                 android:id="@+id/search_bar"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
-                
+                android:layout_height="wrap_content"
+                android:visibility="gone" >
+
                 <EditText
                     android:id="@+id/search_field"
                     android:layout_width="100dp"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
+
                 <Button
-                    android:text="search"
-                    android:textSize="10sp"
-                    android:textColor="@android:color/black"
                     android:id="@+id/search_button"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                
+                    android:layout_height="wrap_content"
+                    android:text="search"
+                    android:textColor="@android:color/black"
+                    android:textSize="10sp" />
             </LinearLayout>
 
             <ScrollView
@@ -111,19 +112,30 @@
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/export_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/search_bar"
-        android:layout_toRightOf="@+id/left_section" >
+        android:layout_toRightOf="@+id/left_section"
+        android:orientation="vertical" >
 
         <fragment
             android:id="@+id/map"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-    </LinearLayout>
+
+        <com.google.ads.AdView
+            android:layout_marginBottom="5dp"
+            xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            ads:adSize="BANNER"
+            ads:adUnitId="ca-app-pub-9871680873332580/1769740158" />
+    </FrameLayout>
 
     <Button
         android:id="@+id/side_tray"
@@ -131,7 +143,8 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/left_section"
-        android:background="@drawable/side_tray" />
+        android:background="@drawable/side_tray"
+        android:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/bottom_bar"

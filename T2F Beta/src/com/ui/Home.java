@@ -2,9 +2,9 @@
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
+import com.ui.R;
 
 import android.app.ActionBar;
 import android.content.Context;
@@ -39,6 +39,8 @@ import com.core.CacheManager;
 import com.core.Constants;
 import com.core.Time2FlyApp;
 import com.core.Utils;
+import com.google.ads.AdRequest;
+import com.google.ads.AdView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
@@ -113,6 +115,15 @@ public class Home extends FragmentActivity {
 		initUI();
 		initActionBar();
 		appInstance = (Time2FlyApp) getApplication();
+		
+		
+		
+		AdView adview = (AdView)findViewById(R.id.adView);
+		AdRequest re = new AdRequest();
+		re.setTesting(true);
+		adview.loadAd(re);
+
+		
 		
 		initGoogleMap();
 		cache.cyclesCount = 0;
@@ -409,33 +420,9 @@ public class Home extends FragmentActivity {
 			startActivity(settings);
 			break;
 
-		case R.id.play:
-			if (SharedResources.weatherPlayed) {
-				SharedResources.weatherPlayed = false;
-				Bitmap b = BitmapFactory.decodeResource(getResources(),
-						R.drawable.play);
-				BitmapDrawable d = new BitmapDrawable(b);
-				item.setIcon(d);
-
-			} else {
-				SharedResources.weatherPlayed = true;
-				Bitmap b = BitmapFactory.decodeResource(getResources(),
-						R.drawable.pause);
-				BitmapDrawable d = new BitmapDrawable(b);
-				item.setIcon(d);
-			}
-			break;
+					
 			
-			
-		case R.id.search:
-			if(SharedLayouts.searchBar.getVisibility() == View.VISIBLE){
-				SharedLayouts.searchBar.setVisibility(View.GONE);
-				SharedResources.searchFilter = false;
-				renderTargets();
-			}
-			else
-				SharedLayouts.searchBar.setVisibility(View.VISIBLE);
-			break;
+	
 		}
 		return super.onOptionsItemSelected(item);
 	}

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="intervalsAlias">
+        <item>"10 minutes"</item>
+        <item>"20 minutes"</item>
+        <item>"30 minutes"</item>
+        <item>"1 hour"</item>
+    </string-array>
+
+    <string-array name="intervalsVals">
+        <item >"10"</item>
+        <item >"20"</item>
+        <item >"30"</item>
+        <item >"60"</item>        
+    </string-array>
+    
+    
+    <string-array name="transparencyAlias">
+        <item>"100%"</item>
+        <item>"75%"</item>
+        <item>"50%"</item>
+        <item>"25%"</item>
+        <item>"0%"</item>
+    </string-array>
+
+    <string-array name="transparencyVals">
+        <item >"0.9"</item>
+        <item >"0.75"</item>
+        <item >"0.5"</item>
+        <item >"0.25"</item>        
+        <item >"0.0"</item>        
+    </string-array>
+    
+    
+    
+
+</resources>
