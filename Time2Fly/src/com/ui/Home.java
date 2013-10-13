@@ -622,7 +622,7 @@ public class Home extends FragmentActivity {
 					dir.mkdir();
 					final File[] files = dir.listFiles();
 					SharedResources.round_robin++;
-					if (files.length == 0)
+					if (files == null || files.length == 0)
 						return;
 					SharedResources.round_robin =SharedResources. round_robin % files.length;
 					BitmapFactory.Options opts = new Options();
