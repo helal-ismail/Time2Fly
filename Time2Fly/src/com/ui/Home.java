@@ -584,18 +584,21 @@ public class Home extends FragmentActivity {
 		protected void onPostExecute(Void result) {
 			File root = Environment.getExternalStorageDirectory();
 			root.mkdir();
-			File appDir = new File(root, "Time2Fly");
+			final File appDir = new File(root, "Time2Fly");
 			appDir.mkdir();
-			String dirName = Utils.getInstance().getWeatherOverlayDir(googleMap.getCameraPosition().zoom);
-			File dir = new File(appDir, dirName);
-			dir.mkdir();
-			final File[] files = dir.listFiles();
+			
 			TimerTask task = new TimerTask() {
 				@Override
 				public void run() {
 					if (!SharedResources.weatherPlayed) {
 						return;
 					}
+					
+					String dirName = Utils.getInstance().getWeatherOverlayDir(cache.zoom);
+					Log.d("helal", "ZOOM :" + cache.zoom +" -- " + dirName);
+					File dir = new File(appDir, dirName);
+					dir.mkdir();
+					final File[] files = dir.listFiles();
 					SharedResources.round_robin++;
 					if (files.length == 0)
 						return;
@@ -604,6 +607,7 @@ public class Home extends FragmentActivity {
 					opts.inSampleSize = 2;
 					SharedResources.weather_bmp = BitmapFactory.decodeFile(
 							files[SharedResources.round_robin].getPath(), opts);
+					
 					runOnUiThread(playWeatherRunnable);
 				}
 			};
