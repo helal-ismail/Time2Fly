@@ -434,7 +434,12 @@ public class Home extends FragmentActivity {
 				renderTargets();
 			}
 			else
+			{
+				int width = getWindowManager().getDefaultDisplay().getWidth();
 				SharedLayouts.searchBar.setVisibility(View.VISIBLE);
+				SharedLayouts.searchField.getLayoutParams().width = (int)(width / 6.5);
+				
+			}
 			break;
 			
 		case R.id.show:
@@ -515,8 +520,9 @@ public class Home extends FragmentActivity {
 		arrow.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				ScrollView sv = (ScrollView) SharedLayouts.drawer.getParent();
-				sv.setVisibility(View.GONE);
+				/*ScrollView sv = (ScrollView) SharedLayouts.drawer.getParent();
+				sv.setVisibility(View.GONE);*/
+				SharedLayouts.drawer1.setVisibility(View.GONE);
 				SharedLayouts.drawer2.setVisibility(View.VISIBLE);
 				updateDetailedView(t, distance);
 				LatLng latLng = new LatLng(t.lat, t.lon);
@@ -638,9 +644,9 @@ public class Home extends FragmentActivity {
 			if (cache.weatherOverlay != null)
 				cache.weatherOverlay.remove();
 
-			float[] bounds = Utils.getInstance().getWeatherOverlayBounds(cache.zoom)
-			LatLng southwest = new LatLng(20.00107, 111.68321);
-			LatLng northeast = new LatLng(24.60560, 116.66013);
+			float[] boundsArr = Utils.getInstance().getWeatherOverlayBounds(cache.zoom);
+			LatLng southwest = new LatLng(boundsArr[0], boundsArr[3]);
+			LatLng northeast = new LatLng(boundsArr[2], boundsArr[1]);
 			
 			float transparency = appInstance.getWeatherOverlayTransparency();
 			LatLngBounds bounds = new LatLngBounds(southwest, northeast);
@@ -751,7 +757,7 @@ public class Home extends FragmentActivity {
 		int width = getWindowManager().getDefaultDisplay().getWidth();
 		LinearLayout leftSection = (LinearLayout)findViewById(R.id.left_section);
 		leftSection.getLayoutParams().width = width / 4 ;
-		
+		SharedLayouts.searchField.getLayoutParams().width = (int)(width / 6.5);
 	};
 	
 	@Override

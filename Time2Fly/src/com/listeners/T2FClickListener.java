@@ -41,10 +41,13 @@ public class T2FClickListener implements OnClickListener{
 			
 		// Back Button	
 		case R.id.back:
+			
 			SharedLayouts.drawer2.setVisibility(View.GONE);
-			ScrollView sv = (ScrollView) SharedLayouts.drawer.getParent();
+			SharedLayouts.drawer1.setVisibility(View.VISIBLE);
+			
+/*			ScrollView sv = (ScrollView) SharedLayouts.drawer.getParent();
 			sv.setVisibility(View.VISIBLE);
-			break;
+*/			break;
 			
 			
 		default:

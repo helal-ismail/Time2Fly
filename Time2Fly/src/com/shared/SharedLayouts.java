@@ -14,6 +14,7 @@ public class SharedLayouts {
 	
 	public static LinearLayout leftSection;
 	public static LinearLayout drawer;
+	public static LinearLayout drawer1;
 	public static LinearLayout drawer2;
 	//public static Button sideTray;	
 	public static Button back;
@@ -28,6 +29,7 @@ public class SharedLayouts {
 	
 		leftSection = (LinearLayout)mContext.findViewById(R.id.left_section);
 		drawer = (LinearLayout) mContext.findViewById(R.id.drawer);
+		drawer1 = (LinearLayout) mContext.findViewById(R.id.drawer1);
 		drawer2 = (LinearLayout) mContext.findViewById(R.id.drawer2);
 		//sideTray = (Button)mContext.findViewById(R.id.side_tray);
 		back = (Button) mContext.findViewById(R.id.back);

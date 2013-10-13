@@ -16,19 +16,19 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </LinearLayout>
-    
+
     <LinearLayout
         android:id="@+id/left_section"
         android:layout_width="200dp"
         android:layout_height="match_parent"
-       android:layout_margin="10dp"
-        android:background="@drawable/background_view_rounded_single"
-       
-        android:orientation="horizontal"
         android:layout_gravity="left"
+        android:layout_margin="10dp"
+        android:background="@drawable/background_view_rounded_single"
+        android:orientation="horizontal"
         android:padding="10dp" >
 
         <LinearLayout
+            android:id="@+id/drawer1"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:orientation="vertical" >
@@ -37,30 +37,32 @@
                 android:id="@+id/time_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:padding="5dp"
                 android:text="Time2Fly"
                 android:textColor="@android:color/white"
-                android:textStyle="bold"
                 android:textSize="10sp"
-                android:padding="5dp" />
+                android:textStyle="bold" />
 
             <LinearLayout
-                android:visibility="gone"
                 android:id="@+id/search_bar"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
-                
+                android:layout_height="wrap_content"
+                android:visibility="gone" >
+
                 <EditText
                     android:id="@+id/search_field"
                     android:layout_width="100dp"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
+
                 <Button
-                    android:text="search"
-                    android:textSize="10sp"
-                    android:textColor="@android:color/black"
+                    android:background="@android:drawable/btn_default"
                     android:id="@+id/search_button"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                
+                    android:layout_height="wrap_content"
+                    android:text="search"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:textSize="10sp" />
             </LinearLayout>
 
             <ScrollView
@@ -79,8 +81,6 @@
             android:id="@+id/drawer2"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_weight="3"
-            android:background="@drawable/side_panel"
             android:orientation="vertical"
             android:padding="10dp"
             android:visibility="gone" >
@@ -90,6 +90,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
+                android:background="@android:drawable/btn_default"
                 android:textColor="@android:color/black"
                 android:textSize="12sp"
                 android:textStyle="bold" />
@@ -107,7 +108,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:background="@drawable/rounded_border"
+                android:background="@android:drawable/btn_default"
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:padding="7dp" >
@@ -115,6 +116,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
                     android:src="@drawable/facebook" />
 
                 <TextView
