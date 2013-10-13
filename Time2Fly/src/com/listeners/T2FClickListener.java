@@ -24,13 +24,13 @@ public class T2FClickListener implements OnClickListener{
 		switch (view.getId()) {
 		
 		// Side Tray Button
-		case R.id.side_tray:
-			View parent = (View)(SharedLayouts.drawer.getParent()).getParent().getParent();
-			if (parent.getVisibility() == View.GONE)
-				SharedResources.mAnimations.showRightPanel(parent, view);
-			else
-				SharedResources.mAnimations.hideRightPanel(parent, view);
-			break;
+//		case R.id.side_tray:
+//			View parent = (View)(SharedLayouts.drawer.getParent()).getParent().getParent();
+//			if (parent.getVisibility() == View.GONE)
+//				SharedResources.mAnimations.showRightPanel(parent, view);
+//			else
+//				SharedResources.mAnimations.hideRightPanel(parent, view);
+//			break;
 
 			
 		// Search Button	

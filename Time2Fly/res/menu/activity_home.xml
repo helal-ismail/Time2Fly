@@ -15,6 +15,12 @@
             android:title="Terrain"/>
     </group>
 
+     <item
+        android:id="@+id/show"
+        android:icon="@drawable/up"
+        android:showAsAction="always"
+        android:title="Show"/>
+     
     <item
         android:id="@+id/play"
         android:icon="@drawable/pause"

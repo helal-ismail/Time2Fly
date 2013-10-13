@@ -94,7 +94,7 @@ public class Home extends FragmentActivity {
 		int width = getWindowManager().getDefaultDisplay().getWidth();
 		SharedLayouts.leftSection.getLayoutParams().width = (int)(width / 3.5) ;
 		
-		SharedLayouts.sideTray.setOnClickListener(listener);
+		//SharedLayouts.sideTray.setOnClickListener(listener);
 		SharedLayouts.searchButton.setOnClickListener(listener);
 		SharedLayouts.back.setOnClickListener(listener);
 	
@@ -436,6 +436,22 @@ public class Home extends FragmentActivity {
 			else
 				SharedLayouts.searchBar.setVisibility(View.VISIBLE);
 			break;
+			
+		case R.id.show:
+			if (SharedLayouts.leftSection.getVisibility() == View.VISIBLE)
+			{
+				SharedLayouts.leftSection.setVisibility(View.GONE);
+				SharedLayouts.leftSection.startAnimation(MyAnimations.mSlideOutTop);
+				item.setIcon(R.drawable.down);
+			}
+			else
+			{
+				SharedLayouts.leftSection.setVisibility(View.VISIBLE);
+				SharedLayouts.leftSection.startAnimation(MyAnimations.mSlideInTop);
+				item.setIcon(R.drawable.up);
+
+			}
+			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -622,8 +638,10 @@ public class Home extends FragmentActivity {
 			if (cache.weatherOverlay != null)
 				cache.weatherOverlay.remove();
 
+			float[] bounds = Utils.getInstance().getWeatherOverlayBounds(cache.zoom)
 			LatLng southwest = new LatLng(20.00107, 111.68321);
 			LatLng northeast = new LatLng(24.60560, 116.66013);
+			
 			float transparency = appInstance.getWeatherOverlayTransparency();
 			LatLngBounds bounds = new LatLngBounds(southwest, northeast);
 			cache.weatherOverlay = googleMap

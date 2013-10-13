@@ -231,6 +231,18 @@ public class Utils {
 			return "256";
 	}
 	
+	// S - W - N - E
+	public float[] getWeatherOverlayBounds(float zoomLevel){
+		if (zoomLevel >= 10)
+			return new float[] {21.72777f, 114.79378f, 22.87890f ,113.54956f};
+		else if (zoomLevel > 7.5)
+			return new float[]{21.15220f, 115.41589f, 23.45446f, 112.92745f};
+		else
+			return new float[] {20.00107f, 116.66013f, 24.60560f, 111.68321f};
+	}
+	
+	
+	
 	
 	public boolean showETA(float bearing, String direction){
 		
