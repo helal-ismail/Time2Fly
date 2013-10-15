@@ -29,6 +29,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -52,11 +53,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.lazylist.ImageLoader;
 import com.listeners.T2FClickListener;
 import com.modules.Tab;
 import com.network.GetDataTask;
 import com.network.GetWeatherOvelay;
 import com.network.MyLocationListener;
+import com.network.QueriedImageTask;
 import com.shared.SharedLayouts;
 import com.shared.SharedResources;
 
@@ -66,7 +69,7 @@ public class Home extends FragmentActivity {
 	GoogleMap googleMap;
 	CacheManager cache = CacheManager.getInstance();
 	T2FClickListener listener;
-	
+	ImageLoader imgLoader = new ImageLoader(mContext);
 	
 	Runnable refreshValsRunnable = new Runnable() {
 		@Override
@@ -697,7 +700,7 @@ public class Home extends FragmentActivity {
 		else
 			Toast.makeText(mContext, "NULL", 3000).show();
 
-		LinearLayout share = (LinearLayout) SharedLayouts.drawer2.getChildAt(2);
+		LinearLayout share = (LinearLayout) SharedLayouts.drawer2.getChildAt(3);
 
 		share.setOnClickListener(new OnClickListener() {
 			@Override
@@ -713,6 +716,18 @@ public class Home extends FragmentActivity {
 			}
 		});
 
+		
+		// GET URL HERE
+		ImageView imgV = (ImageView)findViewById(R.id.queried_image);
+		if(!t.imageLoaded){
+			String url = "http://www.airliners.net/search/photo.search?regsearch="+t.reg+"&distinct_entry=true";
+			QueriedImageTask task = new QueriedImageTask();
+			task.imgLoader = imgLoader;
+			task.imgV = imgV;
+			task.url = url;
+			task.execute();
+			t.imageLoaded = true;
+		}
 		cache.selectedReg = t.addr;
 	}
 

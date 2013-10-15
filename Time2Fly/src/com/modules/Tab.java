@@ -30,6 +30,7 @@ public class Tab implements Comparable<Tab> {
 	public float xLon;
 	public boolean isActive = true;
 	public Marker marker;
+	public boolean imageLoaded = false;
 
 	@Override
 	public int compareTo(Tab tab) {

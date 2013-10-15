@@ -55,14 +55,14 @@
                     android:layout_height="wrap_content" />
 
                 <Button
-                    android:background="@android:drawable/btn_default"
                     android:id="@+id/search_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@android:drawable/btn_default"
                     android:text="search"
-                    android:textStyle="bold"
                     android:textColor="@android:color/black"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <ScrollView
@@ -102,6 +102,13 @@
                 android:textColor="@android:color/black"
                 android:textSize="12sp"
                 android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/queried_image"
+                android:src="@drawable/loading"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                 />
 
             <LinearLayout
                 android:id="@+id/fb_share"
