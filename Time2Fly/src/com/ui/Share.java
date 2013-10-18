@@ -1,29 +1,29 @@
 package com.ui;
 
 import java.io.File;
-import java.io.FileInputStream;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.core.Constants;
+import com.core.CacheManager;
 import com.facebook.android.DialogError;
-import com.facebook.android.Facebook;
 import com.facebook.android.Facebook.DialogListener;
 import com.facebook.android.FacebookError;
 
 public class Share extends Activity {
 
-	Facebook facebook;
-	byte[] data;
+	// Facebook facebook;
+	// byte[] data;
+	String path;
+	Context mContext = this;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,65 +34,45 @@ public class Share extends Activity {
 		BitmapDrawable d = new BitmapDrawable(bmp);
 		TextView image = (TextView) findViewById(R.id.image);
 		image.setBackgroundDrawable(d);
-		facebook = new Facebook("1418792551675833");
 		File file = new File((String) getIntent().getExtras().get("path"));
-		data = new byte[(int) file.length()];
-		try {
-			new FileInputStream(file).read(data);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		path = file.getPath();
+		// data = new byte[(int) file.length()];
+		// try {
+		// new FileInputStream(file).read(data);
+		// } catch (Exception e) {
+		// e.printStackTrace();
+		// }
 
 		Button share = (Button) findViewById(R.id.share);
 		share.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				post();
+				postToWall();
 			}
 		});
 	}
-
-	private void post() {
-		facebook.authorize(this, new String[] { "publish_stream" },
-				new DialogListener() {
-
-					@Override
-					public void onFacebookError(FacebookError e) {
-						// TODO Auto-generated method stub
-					}
-
-					@Override
-					public void onError(DialogError dialogError) {
-						// TODO Auto-generated method stub
-					}
-
-					@Override
-					public void onComplete(Bundle values) {
-						postToWall(values.getString(Facebook.TOKEN));
-					}
-
-					@Override
-					public void onCancel() {
-						// TODO Auto-generated method stub
-					}
-				});
-
-	}
-
-	private void postToWall(String accessToken) {
-		Bundle params = new Bundle();
-
-		params.putString(Facebook.TOKEN, accessToken);
-
-		// The byte array is the data of a picture.
-		params.putByteArray("picture", data);
-
-		try {
-			facebook.request("me/photos", params, "POST");
-
-		} catch (Exception e) {
-			Log.d(Constants.TAG, e.getMessage());
-		}
+	
+	public void postToWall(){
+		
+		// TEST WITH BUNDLE PARAMS
+		CacheManager.getInstance().facebook.dialog(this, "feed", new DialogListener() {
+			 
+			   @Override
+			   public void onFacebookError(FacebookError e) {
+			   }
+			 
+			   @Override
+			   public void onError(DialogError e) {
+			   }
+			 
+			   @Override
+			   public void onComplete(Bundle values) {
+			   }
+			 
+			   @Override
+			   public void onCancel() {
+			   }
+			  });
 	}
 
 }

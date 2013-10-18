@@ -253,7 +253,7 @@ public class Home extends FragmentActivity {
 	}
 
 	private void renderTargets() {
-		
+		SharedResources.localTime = new Date();
 		String txt = "Time2Fly " + SharedResources.localTime.toLocaleString();
 		SharedLayouts.timeLabel.setText(txt);
 		cache.num_targets = 0;

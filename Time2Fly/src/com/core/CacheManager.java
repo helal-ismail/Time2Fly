@@ -3,6 +3,7 @@ package com.core;
 import android.graphics.Bitmap;
 import android.location.Location;
 
+import com.facebook.android.AsyncFacebookRunner;
 import com.facebook.android.Facebook;
 import com.google.android.gms.maps.model.GroundOverlay;
 import com.modules.MyHash;
@@ -51,6 +52,8 @@ public class CacheManager {
 	
     
     public Facebook facebook;
+    public AsyncFacebookRunner fbAsyncRunner;
+    
     
 
 

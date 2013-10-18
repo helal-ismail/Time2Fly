@@ -86,7 +86,29 @@ public class Time2FlyApp extends Application {
 		return prefs.getBoolean(Constants.IS_FIRST_TIME, false);
 	}
 	
+	public void setFbAccessToken(String accessToken){
+		Editor editor = prefs.edit();
+		editor.putString(Constants.FB_ACCESS_TOKEN, accessToken);
+		editor.commit();
+	}
+	
+	public String getFbAccessToken()
+	{
+		return  prefs.getString(Constants.FB_ACCESS_TOKEN, null);
+
+	}
 	
 	
+	public void setFbAccessExpires(long accessExpires){
+		Editor editor = prefs.edit();
+		editor.putLong(Constants.FB_ACCESS_EXPIRES, accessExpires);
+		editor.commit();
+	}
+	
+	public Long getFbAccessExpires()
+	{
+		return  prefs.getLong(Constants.FB_ACCESS_EXPIRES, 0);
+
+	}
 
 }

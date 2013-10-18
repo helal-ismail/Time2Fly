@@ -1,6 +1,5 @@
 package com.shared;
 
-import android.animation.TimeAnimator.TimeListener;
 import android.app.Activity;
 import android.widget.Button;
 import android.widget.EditText;

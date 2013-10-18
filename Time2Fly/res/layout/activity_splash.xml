@@ -34,34 +34,15 @@
         android:layout_below="@+id/text"
         android:layout_centerHorizontal="true"
         android:gravity="center"
-        android:orientation="horizontal" >
+        android:orientation="vertical" >
 
-        <LinearLayout
-            android:id="@+id/fb_login"
+        <com.facebook.widget.LoginButton
+            android:id="@+id/authButton"
             android:layout_width="180dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_margin="10dp"
-            android:layout_marginRight="20dp"
-            android:background="@drawable/rounded_border_black"
-            android:gravity="center"
-            android:orientation="horizontal" >
-
-            <Button
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_margin="5dp"
-                android:background="@drawable/fb_logo" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:gravity="center"
-                android:text="Facebook login"
-                android:textColor="@android:color/black"
-                android:textSize="15sp" />
-        </LinearLayout>
+            android:layout_margin="5dp"
+            android:layout_marginRight="20dp" />
 
         <LinearLayout
             android:id="@+id/guest_login"

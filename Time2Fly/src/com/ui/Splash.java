@@ -1,15 +1,14 @@
 package com.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -18,24 +17,23 @@ import android.widget.Toast;
 
 import com.bugsense.trace.BugSenseHandler;
 import com.core.CacheManager;
+import com.core.Constants;
 import com.core.Time2FlyApp;
-import com.facebook.LoggingBehavior;
-import com.facebook.Request;
-import com.facebook.Response;
-import com.facebook.Session;
-import com.facebook.Session.OpenRequest;
-import com.facebook.SessionLoginBehavior;
-import com.facebook.SessionState;
-import com.facebook.Settings;
-import com.facebook.model.GraphUser;
+import com.facebook.android.AsyncFacebookRunner;
+import com.facebook.android.DialogError;
+import com.facebook.android.Facebook;
+import com.facebook.android.Facebook.DialogListener;
+import com.facebook.android.FacebookError;
+import com.facebook.widget.LoginButton;
 
 public class Splash extends Activity implements OnClickListener {
 	Context mContext = this;
 	Time2FlyApp appInstance;
 	ProgressDialog fbLoginDialog = null;
-	LinearLayout fbLogin;
 	LinearLayout guestLogin;
-	Bundle savedInst;
+
+	LoginButton authButton;
+
 	CacheManager cache = CacheManager.getInstance();
 
 	private void initUI() {
@@ -57,22 +55,11 @@ public class Splash extends Activity implements OnClickListener {
 
 			break;
 		}
-		
-		fbLogin = (LinearLayout) findViewById(R.id.fb_login);
+		authButton = (LoginButton) findViewById(R.id.authButton);
 		guestLogin = (LinearLayout) findViewById(R.id.guest_login);
 
-
-	}
-
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		BugSenseHandler.initAndStartSession(mContext, "c417ebfa");
-		initUI();
-		appInstance = (Time2FlyApp) getApplication();
-
 		if (!appInstance.isSocialLoginEnabled()) {
-			fbLogin.setVisibility(View.GONE);
+			authButton.setVisibility(View.GONE);
 			guestLogin.setVisibility(View.GONE);
 			Runnable r = new Runnable() {
 				@Override
@@ -87,22 +74,37 @@ public class Splash extends Activity implements OnClickListener {
 		}
 
 		else {
-
-			fbLogin.setOnClickListener(this);
+			authButton.setOnClickListener(this);
 			guestLogin.setOnClickListener(this);
 		}
 
 	}
 
 	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		BugSenseHandler.initAndStartSession(mContext, "c417ebfa");
+		appInstance = (Time2FlyApp) getApplication();
+		initUI();
+
+		cache.facebook = new Facebook(Constants.FB_APP_ID);
+		cache.fbAsyncRunner = new AsyncFacebookRunner(cache.facebook);
+
+	}
+
+	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.fb_login:
-			initFacebook(savedInst);
-
-			onClickLogin();
+		case R.id.authButton:
+			if(cache.facebook.isSessionValid())
+			{
+				Intent intent = new Intent(mContext, Home.class);
+				startActivity(intent);
+				finish();
+			}
+			else
+				loginToFb();
 			break;
-
 		case R.id.guest_login:
 			Intent intent = new Intent(mContext, Home.class);
 			startActivity(intent);
@@ -112,114 +114,67 @@ public class Splash extends Activity implements OnClickListener {
 		default:
 			break;
 		}
-
 	}
 
-	private void initFacebook(Bundle savedInstanceState) {
-		Settings.addLoggingBehavior(LoggingBehavior.INCLUDE_ACCESS_TOKENS);
-		Session session = Session.getActiveSession();
-		if (session == null) {
-			if (savedInstanceState != null) {
-				session = Session.restoreSession(this, null, statusCallback,
-						savedInstanceState);
-			}
-			if (session == null) {
-				session = new Session(this);
-			}
-
-			Session.setActiveSession(session);
-			if (session.getState().equals(SessionState.CREATED_TOKEN_LOADED)) {
-				List<String> permissions = new ArrayList<String>();
-				permissions.add("email");
-
-				OpenRequest openRequest = new Session.OpenRequest(this);
-				openRequest.setCallback(statusCallback);
-				openRequest.setPermissions(permissions);
-
-				openRequest.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO);
-				session.openForRead(openRequest);
-
-			}
-		}
-	}
-
-	private void onClickLogin() {
-		Session session = Session.getActiveSession();
-
-		if (!session.isOpened() && !session.isClosed()) {
-
-			List<String> permissions = new ArrayList<String>();
-			permissions.add("email");
-			OpenRequest openRequest = new Session.OpenRequest(this);
-			openRequest.setCallback(statusCallback);
-			openRequest.setPermissions(permissions);
-			openRequest.setLoginBehavior(SessionLoginBehavior.SUPPRESS_SSO);
-			session.openForRead(openRequest);
-
-		} else {
-			Session.openActiveSession(this, true, statusCallback);
-		}
-	}
-
-	Session.StatusCallback statusCallback = new Session.StatusCallback() {
-
-		public void call(Session session, SessionState state,
-				Exception exception) {
-			if (state.isOpened()) {
-
-				fbLoginDialog = new ProgressDialog(mContext);
-				fbLoginDialog.setTitle("Time2Fly");
-				fbLoginDialog.setIcon(R.drawable.compass_mini);
-				fbLoginDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-				fbLoginDialog.setCancelable(false);
-				fbLoginDialog.setMessage("Authenticating Facebook");
-				fbLoginDialog.show();
-
-				Request.executeMeRequestAsync(session,
-						new Request.GraphUserCallback() {
-							public void onCompleted(GraphUser user,
-									Response response) {
-								try {
-									fbLoginDialog.dismiss();
-									fbLoginDialog = null;
-								} catch (Exception e) {
-									// do nothing
-								}
-
-								if (response != null) {
-									Intent homeIntent = new Intent(mContext,
-											Home.class);
-									startActivity(homeIntent);
-									finish();
-								} else {
-									Toast.makeText(mContext,
-											"Facebook login failed",
-											Toast.LENGTH_LONG).show();
-								}
-							}
-						});
-			}
-		}
+	@Override
+	public void onConfigurationChanged(
+			android.content.res.Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		initUI();
 	};
 
-	public void onStart() {
-		super.onStart();
-		// Session.getActiveSession().addCallback(statusCallback);
-	}
+	// ========= Facebook Functions
+	public void loginToFb() {
+		String accessToken = appInstance.getFbAccessToken();
+		long expires = appInstance.getFbAccessExpires();
+		if (accessToken != null) {
+			cache.facebook.setAccessToken(accessToken);
+			Log.d("FB Sessions", "" + cache.facebook.isSessionValid());
+		}
+		if (expires != 0) {
+			cache.facebook.setAccessExpires(expires);
+		}
+		if (!cache.facebook.isSessionValid()) {
+			cache.facebook.authorize(this, new String[] { "email",
+					"publish_stream" }, new DialogListener() {
+				@Override
+				public void onCancel() {
+				}
 
-	@Override
-	public void onStop() {
-		super.onStop();
-		if (Session.getActiveSession() != null)
-			Session.getActiveSession().removeCallback(statusCallback);
-	}
+				@Override
+				public void onComplete(Bundle values) {
+					appInstance.setFbAccessToken(cache.facebook
+							.getAccessToken());
+					appInstance.setFbAccessExpires(cache.facebook
+							.getAccessExpires());
+				}
 
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		Session.getActiveSession().onActivityResult(this, requestCode,
-				resultCode, data);
+				@Override
+				public void onError(DialogError error) {
+				}
 
+				@Override
+				public void onFacebookError(FacebookError fberror) {
+				}
+			});
+		}
 	}
+	
+	 @Override
+	 public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	  super.onActivityResult(requestCode, resultCode, data);
+	  cache.facebook.authorizeCallback(requestCode, resultCode, data);
+	  if (resultCode == -1){
+		  Intent intent = new Intent(mContext, Home.class);
+		  startActivity(intent);
+		  finish();
+	  }
+	  else
+	  {
+		  Toast.makeText(mContext, "Facbook login failed", Toast.LENGTH_LONG).show();
+	  }
+	 }
+
+	
 
 }

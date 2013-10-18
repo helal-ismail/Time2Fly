@@ -37,4 +37,11 @@ public class Constants {
     public static final String URL_TWITTER_OAUTH_TOKEN = "oauth_token";
     public static final String TWITTER_IS_LOGGED_IN = "twitter_logged_in";
     public static final String TW_LOGIN_PARAMS = "tw_login_params";
+    
+    
+    
+    //FB API
+    public static final String FB_APP_ID = "1418792551675833";
+    public static final String FB_ACCESS_EXPIRES = "access_expires";
+    public static final String FB_ACCESS_TOKEN = "access_token";
 }

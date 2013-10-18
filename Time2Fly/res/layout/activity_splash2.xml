@@ -3,8 +3,8 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@android:color/white"
-    android:orientation="horizontal"
-    android:gravity="center" >
+    android:gravity="center"
+    android:orientation="horizontal" >
 
     <ImageView
         android:id="@+id/logo"
@@ -18,8 +18,8 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_weight="1"
-        android:orientation="vertical"
-        android:gravity="center" >
+        android:gravity="center"
+        android:orientation="vertical" >
 
         <TextView
             android:layout_width="fill_parent"
@@ -31,72 +31,48 @@
             android:textColor="@android:color/black"
             android:textSize="12sp" />
 
-     
-        
-        
         <LinearLayout
-        android:layout_below="@+id/text"
-        android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
-
-        <LinearLayout
-            android:layout_marginRight="20dp"
-            android:id="@+id/fb_login"
-            android:layout_width="180dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="5dp"
-            android:background="@drawable/rounded_border_black"
-            android:orientation="horizontal" >
+            android:layout_below="@+id/text"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:orientation="vertical" >
 
-            <Button
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_margin="5dp"
-                android:background="@drawable/fb_logo" />
-
-            <TextView
-                android:layout_width="wrap_content"
+            <com.facebook.widget.LoginButton
+                android:id="@+id/authButton"
+                android:layout_width="180dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:layout_margin="5dp"
-                android:text="Facebook login"
-                android:textColor="@android:color/black"
-                android:textSize="15sp" />
-        </LinearLayout>
-        
-        
-        
-         <LinearLayout
-            android:id="@+id/guest_login"
-            android:layout_width="180dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="5dp"
-            android:background="@drawable/rounded_border_black"
-            android:orientation="horizontal" >
+                android:layout_marginRight="20dp" />
 
-            <Button
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_margin="5dp"
-                android:background="@drawable/compass_mini" />
+            
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/guest_login"
+                android:layout_width="180dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:layout_margin="5dp"
-                android:text="Guest login"
-                android:textColor="@android:color/black"
-                android:textSize="15sp" />
+                android:background="@drawable/rounded_border_black"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/compass_mini" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:text="Guest login"
+                    android:textColor="@android:color/black"
+                    android:textSize="15sp" />
+            </LinearLayout>
         </LinearLayout>
-        
-    </LinearLayout>
-        
-        
-        
     </LinearLayout>
 
 </LinearLayout>

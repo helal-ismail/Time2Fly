@@ -46,7 +46,6 @@ public class QueriedImageTask extends AsyncTask<Void, Void, String>{
 	        
 		} 
 		catch (Exception e) {
-			// TODO Auto-generated catch block
 			
 			Log.d("TEST", e.getMessage());
 		}
