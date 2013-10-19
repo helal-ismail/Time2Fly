@@ -31,7 +31,6 @@ import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -387,6 +386,18 @@ public class Home extends FragmentActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 
+		
+		case R.id.share:
+			Intent intent = new Intent(mContext, Share.class);
+			File SD = Environment.getExternalStorageDirectory();
+			File dir = new File(SD,"Time2Fly");
+			dir.mkdir();
+			File exportDIR = new File(dir, "exports");
+			exportDIR.mkdir();
+			File file = new File(exportDIR, "t2f.jpg");
+			intent.putExtra("path", file.getPath());
+			startActivity(intent);
+			break;
 		case R.id.normal:
 			googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 			break;
