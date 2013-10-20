@@ -15,12 +15,7 @@
             android:title="Terrain"/>
     </group>
 
-     <item
-        android:id="@+id/share"
-        android:icon="@drawable/fb_logo"
-        android:showAsAction="always"
-        android:title="Share"/>
-    
+     
      <item
         android:id="@+id/show"
         android:icon="@drawable/up"

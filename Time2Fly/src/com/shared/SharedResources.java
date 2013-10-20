@@ -23,4 +23,6 @@ public class SharedResources {
 	public static MyAnimations mAnimations;
 	public static Date localTime;
 	public static boolean searchFilter = false;
+	public static boolean facebookLogin = false;
+	
 }

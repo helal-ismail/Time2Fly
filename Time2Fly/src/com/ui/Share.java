@@ -21,7 +21,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.core.CacheManager;
+import com.core.Constants;
 import com.facebook.android.AsyncFacebookRunner.RequestListener;
+import com.facebook.android.Facebook.DialogListener;
+import com.facebook.android.AsyncFacebookRunner;
+import com.facebook.android.DialogError;
+import com.facebook.android.Facebook;
 import com.facebook.android.FacebookError;
 
 public class Share extends Activity {
@@ -30,6 +35,7 @@ public class Share extends Activity {
 	byte[] data;
 	String path;
 	Context mContext = this;
+	CacheManager cache = CacheManager.getInstance();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -53,20 +59,60 @@ public class Share extends Activity {
 		share.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				post();
+				loginToFb();
 			}
 		});
+	}
+	
+	//=============== Facebook Functions ========
+	public void loginToFb() {
+		
+		if(cache.facebook == null)
+		{
+			cache.facebook = new Facebook(Constants.FB_APP_ID);
+			cache.fbAsyncRunner = new AsyncFacebookRunner(cache.facebook);
+		}
+		
+		if (!cache.facebook.isSessionValid()) {
+			cache.facebook.authorize(this, new String[] { "email",
+					"publish_stream" }, new DialogListener() {
+				@Override
+				public void onCancel() {
+				}
+
+				@Override
+				public void onComplete(Bundle values) {
+					//POST HERE
+					post();
+				}
+
+				@Override
+				public void onError(DialogError error) {
+				}
+
+				@Override
+				public void onFacebookError(FacebookError fberror) {
+				}
+			});
+		}
+		else
+			post();
 	}
 
 	public void post() {
 		new AsyncTask<Void, Void, Boolean>() {
+			
+			protected void onPreExecute() {
+				Toast.makeText(mContext, "Sharing via Facebook!", Toast.LENGTH_LONG).show();
+				
+			};
 			@Override
 			protected Boolean doInBackground(Void... params) {
 				try {
 					Bundle bundle = new Bundle();
 					try {
 						bundle.putByteArray("photo", data);
-						bundle.putString("caption", "test caption");
+						bundle.putString("caption", "Time2Fly");
 
 						
 						CacheManager.getInstance().fbAsyncRunner.request(
@@ -88,9 +134,8 @@ public class Share extends Activity {
 			@Override
 			protected void onPostExecute(Boolean result) {
 				super.onPostExecute(result);
-				if (!result) {
+				Toast.makeText(mContext, "Facebook post success", Toast.LENGTH_LONG).show();
 
-				}
 
 			}
 		}.execute();

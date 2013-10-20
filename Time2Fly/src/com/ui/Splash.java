@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,6 +24,7 @@ import com.facebook.android.Facebook;
 import com.facebook.android.Facebook.DialogListener;
 import com.facebook.android.FacebookError;
 import com.facebook.widget.LoginButton;
+import com.shared.SharedResources;
 
 public class Splash extends Activity implements OnClickListener {
 	Context mContext = this;
@@ -58,7 +58,7 @@ public class Splash extends Activity implements OnClickListener {
 		authButton = (LoginButton) findViewById(R.id.authButton);
 		guestLogin = (LinearLayout) findViewById(R.id.guest_login);
 
-		if (!appInstance.isSocialLoginEnabled()) {
+		if (true) {
 			authButton.setVisibility(View.GONE);
 			guestLogin.setVisibility(View.GONE);
 			Runnable r = new Runnable() {
@@ -67,6 +67,8 @@ public class Splash extends Activity implements OnClickListener {
 					Intent intent = new Intent(mContext, Home.class);
 					startActivity(intent);
 					finish();
+
+					  SharedResources.facebookLogin = false;
 				}
 			};
 			Handler handler = new Handler();
@@ -85,30 +87,32 @@ public class Splash extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		BugSenseHandler.initAndStartSession(mContext, "c417ebfa");
 		appInstance = (Time2FlyApp) getApplication();
-		initUI();
-
 		cache.facebook = new Facebook(Constants.FB_APP_ID);
 		cache.fbAsyncRunner = new AsyncFacebookRunner(cache.facebook);
 
+		initUI();
+
+	
 	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.authButton:
-			if(cache.facebook.isSessionValid())
-			{
+			if (cache.facebook.isSessionValid()) {
 				Intent intent = new Intent(mContext, Home.class);
 				startActivity(intent);
 				finish();
-			}
-			else
+				SharedResources.facebookLogin = true;
+			} else
 				loginToFb();
 			break;
 		case R.id.guest_login:
 			Intent intent = new Intent(mContext, Home.class);
 			startActivity(intent);
 			finish();
+
+			SharedResources.facebookLogin = false;
 			break;
 
 		default:
@@ -159,22 +163,20 @@ public class Splash extends Activity implements OnClickListener {
 			});
 		}
 	}
-	
-	 @Override
-	 public void onActivityResult(int requestCode, int resultCode, Intent data) {
-	  super.onActivityResult(requestCode, resultCode, data);
-	  cache.facebook.authorizeCallback(requestCode, resultCode, data);
-	  if (resultCode == -1){
-		  Intent intent = new Intent(mContext, Home.class);
-		  startActivity(intent);
-		  finish();
-	  }
-	  else
-	  {
-		  Toast.makeText(mContext, "Facbook login failed", Toast.LENGTH_LONG).show();
-	  }
-	 }
 
-	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		cache.facebook.authorizeCallback(requestCode, resultCode, data);
+		if (resultCode == -1) {
+			Intent intent = new Intent(mContext, Home.class);
+			startActivity(intent);
+			finish();
+			SharedResources.facebookLogin = true;
+		} else {
+			Toast.makeText(mContext, "Facbook login failed", Toast.LENGTH_LONG)
+					.show();
+		}
+	}
 
 }
