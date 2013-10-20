@@ -47,7 +47,7 @@ public class QueriedImageTask extends AsyncTask<Void, Void, String>{
 		} 
 		catch (Exception e) {
 			
-			Log.d("TEST", e.getMessage());
+			//Log.d("TEST", e.getMessage());
 		}
 
 		return result;

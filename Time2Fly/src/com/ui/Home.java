@@ -722,10 +722,17 @@ public class Home extends FragmentActivity {
 					t.marker.showInfoWindow();
 				
 				LatLng latLng = new LatLng(t.lat, t.lon);
-				googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
-				
+				googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));				
 				export();
-
+				
+				/*File SD = Environment.getExternalStorageDirectory();
+				File dir = new File(SD, "Time2Fly");
+				File exports = new File(dir, "exports");
+				exports.mkdirs();
+				File file = new File(exports, "t2f.jpg");
+				Intent intent = new Intent(mContext, Share.class);
+				intent.putExtra("path", file.getPath());
+				startActivity(intent);*/
 			}
 		});
 

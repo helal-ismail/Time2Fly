@@ -52,7 +52,7 @@ public class Share extends Activity {
 		try {
 			new FileInputStream(file).read(data);
 		} catch (Exception e) {
-			e.printStackTrace();
+			Toast.makeText(mContext, "Image transformation failed", Toast.LENGTH_LONG).show();
 		}
 
 		Button share = (Button) findViewById(R.id.share);
