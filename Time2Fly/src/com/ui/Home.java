@@ -723,7 +723,7 @@ public class Home extends FragmentActivity {
 				
 				LatLng latLng = new LatLng(t.lat, t.lon);
 				googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));				
-				export();
+				export();	
 				
 				/*File SD = Environment.getExternalStorageDirectory();
 				File dir = new File(SD, "Time2Fly");

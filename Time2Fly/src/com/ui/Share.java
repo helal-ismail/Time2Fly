@@ -8,6 +8,7 @@ import java.net.MalformedURLException;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -22,11 +23,11 @@ import android.widget.Toast;
 
 import com.core.CacheManager;
 import com.core.Constants;
-import com.facebook.android.AsyncFacebookRunner.RequestListener;
-import com.facebook.android.Facebook.DialogListener;
 import com.facebook.android.AsyncFacebookRunner;
+import com.facebook.android.AsyncFacebookRunner.RequestListener;
 import com.facebook.android.DialogError;
 import com.facebook.android.Facebook;
+import com.facebook.android.Facebook.DialogListener;
 import com.facebook.android.FacebookError;
 
 public class Share extends Activity {
@@ -71,27 +72,35 @@ public class Share extends Activity {
 		{
 			cache.facebook = new Facebook(Constants.FB_APP_ID);
 			cache.fbAsyncRunner = new AsyncFacebookRunner(cache.facebook);
+			
 		}
 		
 		if (!cache.facebook.isSessionValid()) {
 			cache.facebook.authorize(this, new String[] { "email",
-					"publish_stream" }, new DialogListener() {
+					"publish_stream","read_stream" }, Facebook.FORCE_DIALOG_AUTH, new DialogListener() {
 				@Override
 				public void onCancel() {
+					Log.d("helal", "Canceled");
 				}
 
 				@Override
 				public void onComplete(Bundle values) {
+
+					Log.d("helal", "Complete");
 					//POST HERE
-					post();
+					//post();
 				}
 
 				@Override
 				public void onError(DialogError error) {
+
+					Log.d("helal", "error");
 				}
 
 				@Override
 				public void onFacebookError(FacebookError fberror) {
+
+					Log.d("helal", "fb error");
 				}
 			});
 		}
@@ -113,7 +122,9 @@ public class Share extends Activity {
 					try {
 						bundle.putByteArray("photo", data);
 						bundle.putString("caption", "Time2Fly");
-
+						bundle.putFloat("place:location:latitude",1f );
+						bundle.putFloat("place:location:longitude", 1f);
+						
 						
 						CacheManager.getInstance().fbAsyncRunner.request(
 								"me/photos", bundle, "POST",
@@ -173,6 +184,18 @@ public class Share extends Activity {
 		public void onFacebookError(FacebookError e, Object state) {
 			// TODO Auto-generated method stub
 			
+		}
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		Log.d("helal", ""+resultCode);
+		if(resultCode == -1)
+		{
+	        cache.facebook	.authorizeCallback(requestCode, resultCode, data);  
+			post();
 		}
 	}
 
