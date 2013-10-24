@@ -5,15 +5,20 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.security.MessageDigest;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -68,6 +73,21 @@ public class Share extends Activity {
 	//=============== Facebook Functions ========
 	public void loginToFb() {
 		
+		try {
+	        PackageInfo info = getPackageManager().getPackageInfo(
+	                "com.ui", 
+	                PackageManager.GET_SIGNATURES);
+	        for (Signature signature : info.signatures) {
+	            MessageDigest md = MessageDigest.getInstance("SHA");
+	            md.update(signature.toByteArray());
+	            Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+	            }
+	    } 
+		catch(Exception e)
+		{
+			Log.d("helal",e.getMessage());
+		}
+		
 		if(cache.facebook == null)
 		{
 			cache.facebook = new Facebook(Constants.FB_APP_ID);
@@ -77,7 +97,7 @@ public class Share extends Activity {
 		
 		if (!cache.facebook.isSessionValid()) {
 			cache.facebook.authorize(this, new String[] { "email",
-					"publish_stream","read_stream" }, Facebook.FORCE_DIALOG_AUTH, new DialogListener() {
+					"publish_stream","read_stream" }, new DialogListener() {
 				@Override
 				public void onCancel() {
 					Log.d("helal", "Canceled");
@@ -122,9 +142,9 @@ public class Share extends Activity {
 					try {
 						bundle.putByteArray("photo", data);
 						bundle.putString("caption", "Time2Fly");
-						bundle.putFloat("place:location:latitude",1f );
-						bundle.putFloat("place:location:longitude", 1f);
-						
+						bundle.putFloat("place:location:latitude",(float) cache.currentLoc.getLatitude() );
+						bundle.putFloat("place:location:longitude", (float) cache.currentLoc.getLongitude());
+						bundle.putString("place", "211822778828087");
 						
 						CacheManager.getInstance().fbAsyncRunner.request(
 								"me/photos", bundle, "POST",
@@ -145,8 +165,10 @@ public class Share extends Activity {
 			@Override
 			protected void onPostExecute(Boolean result) {
 				super.onPostExecute(result);
-				Toast.makeText(mContext, "Facebook post success", Toast.LENGTH_LONG).show();
-
+				if(result)
+					Toast.makeText(mContext, "Facebook post success", Toast.LENGTH_LONG).show();
+				else
+					Toast.makeText(mContext, "Facebook post failed", Toast.LENGTH_LONG).show();
 
 			}
 		}.execute();

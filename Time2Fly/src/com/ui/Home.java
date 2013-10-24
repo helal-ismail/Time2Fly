@@ -9,6 +9,7 @@ import java.util.TimerTask;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
@@ -29,6 +30,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -793,6 +795,18 @@ public class Home extends FragmentActivity {
 		LinearLayout leftSection = (LinearLayout)findViewById(R.id.left_section);
 		leftSection.getLayoutParams().width = width / 4 ;
 		SharedLayouts.searchField.getLayoutParams().width = (int)(width / 6.5);
+		TextView detailsBox = (TextView)findViewById(R.id.details_box);
+		Button btn = (Button)findViewById(R.id.back);
+		switch (getResources().getConfiguration().orientation) {
+		case Configuration.ORIENTATION_LANDSCAPE:
+			detailsBox.setTextSize(12);
+			btn.setTextSize(12);
+			break;
+		default:
+			detailsBox.setTextSize(8);
+			btn.setTextSize(8);
+			break;
+		}
 	};
 	
 	@Override

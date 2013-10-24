@@ -77,64 +77,70 @@
             </ScrollView>
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/drawer2"
+        <ScrollView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:orientation="vertical"
-            android:padding="10dp"
-            android:visibility="gone" >
-
-            <Button
-                android:id="@+id/back"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:background="@android:drawable/btn_default"
-                android:textColor="@android:color/black"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:textColor="@android:color/black"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-            <ImageView
-                android:id="@+id/queried_image"
-                android:src="@drawable/loading"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                 />
+            android:background="@android:color/transparent" >
 
             <LinearLayout
-                android:id="@+id/fb_share"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:background="@android:drawable/btn_default"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:padding="7dp" >
+                android:id="@+id/drawer2"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="vertical"
+                android:padding="5dp"
+                android:visibility="gone" >
 
-                <ImageView
-                    android:layout_width="wrap_content"
+                <Button
+                    android:id="@+id/back"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:src="@drawable/facebook" />
+                    android:layout_margin="5dp"
+                    android:background="@android:drawable/btn_default"
+                    android:textColor="@android:color/black"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/details_box"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:textColor="@android:color/black"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/queried_image"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/loading" />
+
+                <LinearLayout
+                    android:id="@+id/fb_share"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Share"
-                    android:textColor="@android:color/black"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
+                    android:layout_gravity="center_horizontal"
+                    android:background="@android:drawable/btn_default"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="7dp" >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:src="@drawable/facebook" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Share"
+                        android:textColor="@android:color/black"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
+        </ScrollView>
     </LinearLayout>
 
     <RelativeLayout
