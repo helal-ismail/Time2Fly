@@ -108,7 +108,26 @@ public class Time2FlyApp extends Application {
 	public Long getFbAccessExpires()
 	{
 		return  prefs.getLong(Constants.FB_ACCESS_EXPIRES, 0);
-
+	}
+	
+	public void setTwitterAccessToken(String twToken){
+		Editor editor = prefs.edit();
+		editor.putString(Constants.TW_LOGIN_PARAMS, twToken);
+		editor.commit();
+	}
+	
+	public String getTwitterAccessToken(){
+		return  prefs.getString(Constants.TW_LOGIN_PARAMS, "");
+	}
+	
+	public void setTwitterLoggedIn(boolean loggedIn){
+		Editor editor = prefs.edit();
+		editor.putBoolean(Constants.TWITTER_IS_LOGGED_IN,loggedIn);
+		editor.commit();
+	}
+	
+	public boolean isTwitterLoggedIn(){
+		return prefs.getBoolean(Constants.TWITTER_IS_LOGGED_IN, false);
 	}
 
 }

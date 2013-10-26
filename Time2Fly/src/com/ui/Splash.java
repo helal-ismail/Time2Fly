@@ -179,4 +179,7 @@ public class Splash extends Activity implements OnClickListener {
 		}
 	}
 
+	
+	
+	
 }

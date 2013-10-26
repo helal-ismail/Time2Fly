@@ -32,14 +32,25 @@
         <Button
             android:padding="5dp"
             android:gravity="center"
-            android:background="@drawable/rounded_border"
-            android:id="@+id/share"
+            android:id="@+id/fb_share"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Share on Facebook"
             android:textColor="@android:color/black"
             android:textSize="20dp"
             android:textStyle="bold" />
+        
+           <Button
+            android:padding="5dp"
+            android:gravity="center"
+            android:id="@+id/tw_share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Share on Twiiter"
+            android:textColor="@android:color/black"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+        
     </LinearLayout>
 
 </RelativeLayout>

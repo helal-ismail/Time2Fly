@@ -1,5 +1,7 @@
 package com.core;
 
+import twitter4j.Twitter;
+import twitter4j.auth.RequestToken;
 import android.graphics.Bitmap;
 import android.location.Location;
 
@@ -53,7 +55,9 @@ public class CacheManager {
     
     public Facebook facebook;
     public AsyncFacebookRunner fbAsyncRunner;
-    
+    public Twitter twitter;
+    public RequestToken TwitterRequestToken;
+  
     
 
 
