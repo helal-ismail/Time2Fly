@@ -7,10 +7,10 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.security.MessageDigest;
 
-import twitter4j.TwitterException;
+import oauth.signpost.basic.DefaultOAuthProvider;
+import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
 import twitter4j.TwitterFactory;
-import twitter4j.conf.Configuration;
-import twitter4j.conf.ConfigurationBuilder;
+import twitter4j.auth.AccessToken;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -27,7 +27,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +50,13 @@ public class Share extends Activity {
 	CacheManager cache = CacheManager.getInstance();
 	Time2FlyApp appInstance;
 	
+	ImageButton fbShare;
+	ImageButton twShare;
+	
+	CommonsHttpOAuthConsumer consumer;
+	DefaultOAuthProvider provider;
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -70,19 +77,20 @@ public class Share extends Activity {
 					Toast.LENGTH_LONG).show();
 		}
 
-		Button fbshare = (Button) findViewById(R.id.fb_share);
-		fbshare.setOnClickListener(new OnClickListener() {
+		fbShare = (ImageButton) findViewById(R.id.fb_share);
+		fbShare.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
 				loginToFb();
 			}
 		});
 
-		Button twshare = (Button) findViewById(R.id.tw_share);
-		twshare.setOnClickListener(new OnClickListener() {
+		checkForSavedLogin();
+		twShare = (ImageButton) findViewById(R.id.tw_share);
+		twShare.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				loginToTW();
+				askOAuth();
 			}
 		});
 	}
@@ -239,34 +247,70 @@ public class Share extends Activity {
 	}
 
 	// ========== Twitter Functions =======
-	public boolean isTwitterLoggedInAlready(){
-		return appInstance.isTwitterLoggedIn();
+	
+	private void checkForSavedLogin()  {
+		 // Get Access Token and persist it
+		try{
+		 AccessToken a = cache.twitter.getOAuthAccessToken();
+		 if (a==null) 
+			 return; //if there are no credentials stored then return to usual activity
+		
+		 // initialize Twitter4J
+		 cache.twitter = new TwitterFactory().getInstance();
+		 cache.twitter.setOAuthConsumer(Constants.TWITTER_CONSUMER_KEY, Constants.TWITTER_CONSUMER_SECRET);
+		 cache.twitter.setOAuthAccessToken(a);
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			return;
+		}
+		}
+
+	private void askOAuth() {  
+		 try {  
+		  consumer = new CommonsHttpOAuthConsumer(Constants.TWITTER_CONSUMER_KEY, Constants.TWITTER_CONSUMER_SECRET);  
+		  provider = new DefaultOAuthProvider("http://twitter.com/oauth/request_token", "http://twitter.com/oauth/access_token", "http://twitter.com/oauth/authorize");  
+		  String authUrl = provider.retrieveRequestToken(consumer, Constants.TWITTER_CALLBACK_URL);  
+		  Toast.makeText(this, "Please authorize this app!", Toast.LENGTH_LONG).show();  
+		  startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(authUrl)));  
+		 } catch (Exception e) {  
+		  Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();  
+		 }  
+		}
+	
+	@Override
+	protected void onResume() {
+	 super.onResume();
+	 if (this.getIntent()!=null && this.getIntent().getData()!=null){
+	  Uri uri = this.getIntent().getData();
+	  if (uri != null && uri.toString().startsWith(Constants.TWITTER_CALLBACK_URL)) {
+	   String verifier = uri.getQueryParameter(oauth.signpost.OAuth.OAUTH_VERIFIER);
+	   try {
+	    // this will populate token and token_secret in consumer
+	    provider.retrieveAccessToken(consumer, verifier);
+
+	    // Get Access Token and persist it
+	    AccessToken a = new AccessToken(consumer.getToken(), consumer.getTokenSecret());
+	    
+	    // initialize Twitter4J
+	    cache.twitter = new TwitterFactory().getInstance();
+	    cache.twitter.setOAuthConsumer(Constants.TWITTER_CONSUMER_KEY, Constants.TWITTER_CONSUMER_SECRET);
+	    cache.twitter.setOAuthAccessToken(a);
+	    
+	    startFirstActivity();
+
+	   } catch (Exception e) {
+	    //Log.e(APP, e.getMessage());
+	    e.printStackTrace();
+	    Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+	   }
+	  }
+	 }
 	}
 	
-	public void loginToTW() {
-		
-		if (!isTwitterLoggedInAlready()) {
-			ConfigurationBuilder builder = new ConfigurationBuilder();
-			builder.setOAuthConsumerKey(Constants.TWITTER_CONSUMER_KEY);
-			builder.setOAuthConsumerSecret(Constants.TWITTER_CONSUMER_SECRET);
-			Configuration configuration = builder.build();
-
-			TwitterFactory factory = new TwitterFactory(configuration);
-			cache.twitter = factory.getInstance();
-
-			try {
-				cache.TwitterRequestToken = cache.twitter
-						.getOAuthRequestToken(Constants.TWITTER_CALLBACK_URL);
-				this.startActivity(new Intent(Intent.ACTION_VIEW, Uri
-						.parse(cache.TwitterRequestToken.getAuthenticationURL())));
-			} catch (TwitterException e) {
-				e.printStackTrace();
-			}
-		} else {
-			// user already logged into twitter
-			Toast.makeText(getApplicationContext(),
-					"Already Logged into twitter", Toast.LENGTH_LONG).show();
-		}
+	public void startFirstActivity(){
+		Toast.makeText(mContext, "Twitter Authorized", Toast.LENGTH_LONG).show();
 	}
+	
 
 }
