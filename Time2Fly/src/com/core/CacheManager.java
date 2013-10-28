@@ -20,6 +20,7 @@ public class CacheManager {
 	public int update_rate = 5000;
 	public MyHash tabs_hash = new MyHash();
 	
+	public String sharedImagePath;
 	
 	public Bitmap weather_bmp;
 	public String selectedReg = "";
@@ -57,7 +58,7 @@ public class CacheManager {
     public AsyncFacebookRunner fbAsyncRunner;
     public Twitter twitter;
     public RequestToken TwitterRequestToken;
-  
+    public boolean twitterLoaded = false;
     
 
 

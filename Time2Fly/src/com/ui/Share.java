@@ -9,9 +9,12 @@ import java.security.MessageDigest;
 
 import oauth.signpost.basic.DefaultOAuthProvider;
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
+import twitter4j.StatusUpdate;
+import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -23,6 +26,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -49,32 +53,59 @@ public class Share extends Activity {
 	Context mContext = this;
 	CacheManager cache = CacheManager.getInstance();
 	Time2FlyApp appInstance;
-	
+
 	ImageButton fbShare;
 	ImageButton twShare;
-	
+
 	CommonsHttpOAuthConsumer consumer;
 	DefaultOAuthProvider provider;
-	
-	
+
+	File file;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		appInstance = (Time2FlyApp)getApplication();
+		StrictMode.enableDefaults();
+		appInstance = (Time2FlyApp) getApplication();
 		setContentView(R.layout.activity_share);
 		String path = (String) getIntent().getExtras().get("path");
-		Bitmap bmp = BitmapFactory.decodeFile(path);
-		BitmapDrawable d = new BitmapDrawable(bmp);
-		TextView image = (TextView) findViewById(R.id.image);
-		image.setBackgroundDrawable(d);
-		File file = new File((String) getIntent().getExtras().get("path"));
-		path = file.getPath();
-		data = new byte[(int) file.length()];
+		if (path != null && !path.equalsIgnoreCase("")) {
+			cache.sharedImagePath = path;
+		}
+
 		try {
+			Bitmap bmp = BitmapFactory.decodeFile(cache.sharedImagePath);
+			BitmapDrawable d = new BitmapDrawable(bmp);
+			TextView image = (TextView) findViewById(R.id.image);
+			image.setBackgroundDrawable(d);
+			file = new File(cache.sharedImagePath);
+			data = new byte[(int) file.length()];
+
 			new FileInputStream(file).read(data);
 		} catch (Exception e) {
 			Toast.makeText(mContext, "Image transformation failed",
 					Toast.LENGTH_LONG).show();
+		}
+
+		if (cache.twitterLoaded) {
+			Toast.makeText(mContext, "Sharing via Twitter", Toast.LENGTH_LONG).show();
+			cache.twitterLoaded = false;
+
+			Thread t = new Thread() {
+				@Override
+				public void run() {
+					try {
+						cache.twitter.updateStatus(new StatusUpdate("Time2Fly")
+								.media(file));
+					} catch (Exception e) {
+						Toast.makeText(mContext,
+								"Twitter failed : " + e.getMessage(),
+								Toast.LENGTH_LONG).show();
+					}
+				};
+			};
+			t.start();
+
 		}
 
 		fbShare = (ImageButton) findViewById(R.id.fb_share);
@@ -85,12 +116,12 @@ public class Share extends Activity {
 			}
 		});
 
-		checkForSavedLogin();
 		twShare = (ImageButton) findViewById(R.id.tw_share);
 		twShare.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				askOAuth();
+				TwitterInitTask task = new TwitterInitTask();
+				task.execute();
 			}
 		});
 	}
@@ -247,70 +278,148 @@ public class Share extends Activity {
 	}
 
 	// ========== Twitter Functions =======
-	
-	private void checkForSavedLogin()  {
-		 // Get Access Token and persist it
-		try{
-		 AccessToken a = cache.twitter.getOAuthAccessToken();
-		 if (a==null) 
-			 return; //if there are no credentials stored then return to usual activity
-		
-		 // initialize Twitter4J
-		 cache.twitter = new TwitterFactory().getInstance();
-		 cache.twitter.setOAuthConsumer(Constants.TWITTER_CONSUMER_KEY, Constants.TWITTER_CONSUMER_SECRET);
-		 cache.twitter.setOAuthAccessToken(a);
+
+	private class TwitterInitTask extends AsyncTask<Void, Void, Boolean> {
+		ProgressDialog dialog;
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			dialog = new ProgressDialog(mContext);
+			dialog.setTitle("Time2Fly");
+			dialog.setCancelable(false);
+			dialog.setIcon(R.drawable.compass_mini);
+			dialog.show();
+			checkForSavedLogin();
+
 		}
-		catch (Exception e) {
+
+		@Override
+		protected Boolean doInBackground(Void... arg0) {
+			return askOAuth();
+		}
+
+		@Override
+		protected void onPostExecute(Boolean result) {
+			super.onPostExecute(result);
+			dialog.dismiss();
+			if (result) {
+				Toast.makeText(mContext, "Authorizing App", Toast.LENGTH_LONG)
+						.show();
+			} else {
+				Toast.makeText(mContext, "Failed to authorize app",
+						Toast.LENGTH_LONG).show();
+			}
+			cache.twitterLoaded = result;
+		}
+	}
+
+	private void checkForSavedLogin() {
+		// Get Access Token and persist it
+		try {
+			AccessToken a = cache.twitter.getOAuthAccessToken();
+			if (a == null)
+				return; // if there are no credentials stored then return to
+						// usual activity
+
+			// initialize Twitter4J
+
+			cache.twitter = TwitterFactory.getSingleton();
+
+			// cache.twitter = new TwitterFactory().getInstance();
+			cache.twitter.setOAuthConsumer(Constants.TWITTER_CONSUMER_KEY,
+					Constants.TWITTER_CONSUMER_SECRET);
+			cache.twitter.setOAuthAccessToken(a);
+		} catch (Exception e) {
 			// TODO: handle exception
 			return;
 		}
-		}
+	}
 
-	private void askOAuth() {  
-		 try {  
-		  consumer = new CommonsHttpOAuthConsumer(Constants.TWITTER_CONSUMER_KEY, Constants.TWITTER_CONSUMER_SECRET);  
-		  provider = new DefaultOAuthProvider("http://twitter.com/oauth/request_token", "http://twitter.com/oauth/access_token", "http://twitter.com/oauth/authorize");  
-		  String authUrl = provider.retrieveRequestToken(consumer, Constants.TWITTER_CALLBACK_URL);  
-		  Toast.makeText(this, "Please authorize this app!", Toast.LENGTH_LONG).show();  
-		  startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(authUrl)));  
-		 } catch (Exception e) {  
-		  Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();  
-		 }  
+	private boolean askOAuth() {
+		try {
+			consumer = new CommonsHttpOAuthConsumer(
+					Constants.TWITTER_CONSUMER_KEY,
+					Constants.TWITTER_CONSUMER_SECRET);
+			provider = new DefaultOAuthProvider(
+					"https://api.twitter.com/oauth/request_token",
+					"https://api.twitter.com/oauth/access_token",
+					"https://api.twitter.com/oauth/authorize");
+
+			String authUrl = provider.retrieveRequestToken(consumer,
+					Constants.TWITTER_CALLBACK_URL);
+
+			startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(authUrl)));
+		} catch (Exception e) {
+			// Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+			return false;
 		}
+		return true;
+	}
+
+
 	
 	@Override
 	protected void onResume() {
-	 super.onResume();
-	 if (this.getIntent()!=null && this.getIntent().getData()!=null){
-	  Uri uri = this.getIntent().getData();
-	  if (uri != null && uri.toString().startsWith(Constants.TWITTER_CALLBACK_URL)) {
-	   String verifier = uri.getQueryParameter(oauth.signpost.OAuth.OAUTH_VERIFIER);
-	   try {
-	    // this will populate token and token_secret in consumer
-	    provider.retrieveAccessToken(consumer, verifier);
+		super.onResume();
+		if (cache.twitterLoaded) {
+			Toast.makeText(mContext, "Sharing via Twitter", Toast.LENGTH_LONG).show();
+			cache.twitterLoaded = false;
 
-	    // Get Access Token and persist it
-	    AccessToken a = new AccessToken(consumer.getToken(), consumer.getTokenSecret());
-	    
-	    // initialize Twitter4J
-	    cache.twitter = new TwitterFactory().getInstance();
-	    cache.twitter.setOAuthConsumer(Constants.TWITTER_CONSUMER_KEY, Constants.TWITTER_CONSUMER_SECRET);
-	    cache.twitter.setOAuthAccessToken(a);
-	    
-	    startFirstActivity();
+			Thread t = new Thread() {
+				@Override
+				public void run() {
+					try {
+						cache.twitter.updateStatus(new StatusUpdate("Time2Fly")
+								.media(file));
+					} catch (Exception e) {
+						Toast.makeText(mContext,
+								"Twitter failed : " + e.getMessage(),
+								Toast.LENGTH_LONG).show();
+					}
+				};
+			};
+			t.start();
 
-	   } catch (Exception e) {
-	    //Log.e(APP, e.getMessage());
-	    e.printStackTrace();
-	    Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-	   }
-	  }
-	 }
+		}
+		
 	}
 	
-	public void startFirstActivity(){
-		Toast.makeText(mContext, "Twitter Authorized", Toast.LENGTH_LONG).show();
+	protected void onResume2() {
+		super.onResume();
+		if (this.getIntent() != null && this.getIntent().getData() != null) {
+			Uri uri = this.getIntent().getData();
+			if (uri != null
+					&& uri.toString()
+							.startsWith(Constants.TWITTER_CALLBACK_URL)) {
+				String verifier = uri
+						.getQueryParameter(oauth.signpost.OAuth.OAUTH_VERIFIER);
+				try {
+					// this will populate token and token_secret in consumer
+					provider.retrieveAccessToken(consumer, verifier);
+
+					// Get Access Token and persist it
+					AccessToken a = new AccessToken(consumer.getToken(),
+							consumer.getTokenSecret());
+
+					// initialize Twitter4J
+					cache.twitter = new TwitterFactory().getInstance();
+					cache.twitter.setOAuthConsumer(
+							Constants.TWITTER_CONSUMER_KEY,
+							Constants.TWITTER_CONSUMER_SECRET);
+					cache.twitter.setOAuthAccessToken(a);
+
+
+				} catch (Exception e) {
+					// Log.e(APP, e.getMessage());
+					e.printStackTrace();
+					Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG)
+							.show();
+				}
+			}
+		}
 	}
+
 	
 
 }
