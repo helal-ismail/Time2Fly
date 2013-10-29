@@ -96,7 +96,7 @@ public class Home extends FragmentActivity {
 		listener = new T2FClickListener(mContext);
 		
 		int width = getWindowManager().getDefaultDisplay().getWidth();
-		SharedLayouts.leftSection.getLayoutParams().width = (int)(width / 3.5) ;
+		SharedLayouts.leftSection.getLayoutParams().width = (int)(width / 2.5) ;
 		
 		//SharedLayouts.sideTray.setOnClickListener(listener);
 		SharedLayouts.searchButton.setOnClickListener(listener);
@@ -454,7 +454,7 @@ public class Home extends FragmentActivity {
 			{
 				int width = getWindowManager().getDefaultDisplay().getWidth();
 				SharedLayouts.searchBar.setVisibility(View.VISIBLE);
-				SharedLayouts.searchField.getLayoutParams().width = (int)(width / 6.5);
+			//	SharedLayouts.searchField.getLayoutParams().width = (int)(width / 4);
 				
 			}
 			break;
@@ -714,9 +714,7 @@ public class Home extends FragmentActivity {
 		else
 			Toast.makeText(mContext, "NULL", 3000).show();
 
-		LinearLayout share = (LinearLayout) SharedLayouts.drawer2.getChildAt(3);
-//		if(!SharedResources.facebookLogin)
-//			share.setVisibility(View.INVISIBLE);
+		Button share = (Button) findViewById(R.id.share);
 		share.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
@@ -792,9 +790,12 @@ public class Home extends FragmentActivity {
 	public void onConfigurationChanged(android.content.res.Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		int width = getWindowManager().getDefaultDisplay().getWidth();
+		
 		LinearLayout leftSection = (LinearLayout)findViewById(R.id.left_section);
-		leftSection.getLayoutParams().width = width / 4 ;
-		SharedLayouts.searchField.getLayoutParams().width = (int)(width / 6.5);
+		leftSection.getLayoutParams().width =  (int)(width / 2.5) ;
+
+		
+		//SharedLayouts.searchField.getLayoutParams().width = (int)(width / 4);
 		TextView detailsBox = (TextView)findViewById(R.id.details_box);
 		Button btn = (Button)findViewById(R.id.back);
 		switch (getResources().getConfiguration().orientation) {
