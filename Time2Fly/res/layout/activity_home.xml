@@ -38,7 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:text="Time2Fly"
+                android:text="Loading targets"
                 android:textColor="@android:color/white"
                 android:textSize="10sp"
                 android:textStyle="bold" />
@@ -96,6 +96,7 @@
                 android:visibility="gone" >
 
                 <Button
+                    android:visibility="gone"
                     android:id="@+id/back"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -116,8 +117,8 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
-                    android:textColor="@android:color/black"
-                    android:textSize="12sp"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
 
                 <Button

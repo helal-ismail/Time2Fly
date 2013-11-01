@@ -278,6 +278,18 @@ public class Utils {
 	}
 	
 	
+	public int getPanelWidth(int screenWidth, int screenHeight)
+	{
+		int ref;
+		if(screenHeight < screenWidth)
+			ref = screenHeight;
+		else 
+			ref = screenWidth;
+		
+		return (int)(ref / 2.2);
+	}
+	
+	
 	
 	
 	

@@ -9,7 +9,6 @@ import java.util.TimerTask;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
@@ -44,6 +43,7 @@ import com.core.Utils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
+import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.GoogleMap.SnapshotReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -96,7 +96,9 @@ public class Home extends FragmentActivity {
 		listener = new T2FClickListener(mContext);
 		
 		int width = getWindowManager().getDefaultDisplay().getWidth();
-		SharedLayouts.leftSection.getLayoutParams().width = (int)(width / 2.5) ;
+		int height = getWindowManager().getDefaultDisplay().getHeight();
+		int w = Utils.getInstance().getPanelWidth(width, height);
+		SharedLayouts.leftSection.getLayoutParams().width = w ;
 		
 		//SharedLayouts.sideTray.setOnClickListener(listener);
 		SharedLayouts.searchButton.setOnClickListener(listener);
@@ -137,12 +139,22 @@ public class Home extends FragmentActivity {
 
 	@Override
 	public void onBackPressed() {
+		
+		if(SharedLayouts.drawer2.getVisibility() == View.VISIBLE)
+		{
+			SharedLayouts.drawer2.setVisibility(View.GONE);
+			SharedLayouts.drawer1.setVisibility(View.VISIBLE);
+		}
+		
+		else
+		{
 		weatherTask.cancel();
 		SharedResources.timer.cancel();
 		SharedResources.timer.purge();
 		BugSenseHandler.closeSession(this);
 		finish();
 		android.os.Process.killProcess(android.os.Process.myPid());
+		}
 	};
 	
 
@@ -216,6 +228,20 @@ public class Home extends FragmentActivity {
 				return false;
 			}
 		});
+		
+		
+		googleMap.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
+			@Override
+			public void onInfoWindowClick(Marker marker) {
+				String title = marker.getTitle();
+				SharedLayouts.drawer1.setVisibility(View.GONE);
+				SharedLayouts.drawer2.setVisibility(View.VISIBLE);
+				
+				Tab tab = cache.tabs_hash.get(cache.selectedReg);
+				updateDetailedView(tab, "");
+				
+			}
+		});
 
 	}
 
@@ -255,7 +281,7 @@ public class Home extends FragmentActivity {
 
 	private void renderTargets() {
 		SharedResources.localTime = new Date();
-		String txt = "Time2Fly " + SharedResources.localTime.toLocaleString();
+		String txt = SharedResources.localTime.toLocaleString();
 		SharedLayouts.timeLabel.setText(txt);
 		cache.num_targets = 0;
 		Object[] tabs;
@@ -339,6 +365,7 @@ public class Home extends FragmentActivity {
 				selectedTab = returnedTab;
 				selectedDest = dist;
 			}
+			
 		}
 
 		if (selectedTab != null)
@@ -790,9 +817,11 @@ public class Home extends FragmentActivity {
 	public void onConfigurationChanged(android.content.res.Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		int width = getWindowManager().getDefaultDisplay().getWidth();
+		int height = getWindowManager().getDefaultDisplay().getHeight();
+		int w = Utils.getInstance().getPanelWidth(width, height);
 		
 		LinearLayout leftSection = (LinearLayout)findViewById(R.id.left_section);
-		leftSection.getLayoutParams().width =  (int)(width / 2.5) ;
+		leftSection.getLayoutParams().width =  w ;
 
 		
 		//SharedLayouts.searchField.getLayoutParams().width = (int)(width / 4);
