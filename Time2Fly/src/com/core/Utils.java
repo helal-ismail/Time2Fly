@@ -224,11 +224,11 @@ public class Utils {
 	
 	public String getWeatherOverlayDir(float zoomLevel){
 		if (zoomLevel >= 10)
-			return "064";
+			return ".064";
 		else if (zoomLevel > 7.5)
-			return "128";
+			return ".128";
 		else
-			return "256";
+			return ".256";
 	}
 	
 	// S - W - N - E

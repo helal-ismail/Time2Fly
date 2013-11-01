@@ -697,9 +697,9 @@ public class Home extends FragmentActivity {
 		
 		String ETA = "ETA : " + minutes + " minutes";
 		
-		TextView tv = (TextView) SharedLayouts.drawer2.getChildAt(1);
+		TextView tv = (TextView) findViewById(R.id.details_box);
 		String info = t.callSign + "\n" + t.spd + " Kts" + "\n" + t.vspd
-				+ " ft/min \n" + t.track + "Â°" + "\n" + t.owner + "\n"
+				+ " ft/min \n" + t.track + "¡" + "\n" + t.owner + "\n"
 				+ distance + "\n" + "SQ : " + t.sqw + "\n" + "Radar ID : "
 				+ t.user_id + "\n"
 				+ETA;
@@ -798,16 +798,16 @@ public class Home extends FragmentActivity {
 		//SharedLayouts.searchField.getLayoutParams().width = (int)(width / 4);
 		TextView detailsBox = (TextView)findViewById(R.id.details_box);
 		Button btn = (Button)findViewById(R.id.back);
-		switch (getResources().getConfiguration().orientation) {
-		case Configuration.ORIENTATION_LANDSCAPE:
-			detailsBox.setTextSize(12);
-			btn.setTextSize(12);
-			break;
-		default:
-			detailsBox.setTextSize(8);
-			btn.setTextSize(8);
-			break;
-		}
+////		switch (getResources().getConfiguration().orientation) {
+////		case Configuration.ORIENTATION_LANDSCAPE:
+////			detailsBox.setTextSize(12);
+////			btn.setTextSize(12);
+////			break;
+////		default:
+////			detailsBox.setTextSize(8);
+////			btn.setTextSize(8);
+////			break;
+//		}
 	};
 	
 	@Override

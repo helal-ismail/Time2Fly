@@ -105,6 +105,12 @@
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
+                <ImageView
+                    android:id="@+id/queried_image"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/loading" />
+
                 <TextView
                     android:id="@+id/details_box"
                     android:layout_width="fill_parent"
@@ -113,12 +119,6 @@
                     android:textColor="@android:color/black"
                     android:textSize="12sp"
                     android:textStyle="bold" />
-
-                <ImageView
-                    android:id="@+id/queried_image"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/loading" />
 
                 <Button
                     android:id="@+id/share"

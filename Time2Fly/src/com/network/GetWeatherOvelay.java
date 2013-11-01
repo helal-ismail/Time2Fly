@@ -24,9 +24,9 @@ public class GetWeatherOvelay extends AsyncTask<Void, Void, Void> {
 	
 	@Override
 	protected Void doInBackground(Void... arg0) {
-		requestData(Constants.WEATHER_064_URL, "064");
-		requestData(Constants.WEATHER_128_URL, "128");
-		requestData(Constants.WEATHER_256_URL, "256");
+		requestData(Constants.WEATHER_064_URL, ".064");
+		requestData(Constants.WEATHER_128_URL, ".128");
+		requestData(Constants.WEATHER_256_URL, ".256");
 		return null;
 	}
 	
