@@ -26,14 +26,11 @@ import com.facebook.android.FacebookError;
 import com.facebook.widget.LoginButton;
 import com.shared.SharedResources;
 
-public class Splash extends Activity implements OnClickListener {
+public class Splash extends Activity {
 	Context mContext = this;
 	Time2FlyApp appInstance;
 	ProgressDialog fbLoginDialog = null;
-	LinearLayout guestLogin;
-
-	LoginButton authButton;
-
+	
 	CacheManager cache = CacheManager.getInstance();
 
 	private void initUI() {
@@ -55,12 +52,8 @@ public class Splash extends Activity implements OnClickListener {
 
 			break;
 		}
-		authButton = (LoginButton) findViewById(R.id.authButton);
-		guestLogin = (LinearLayout) findViewById(R.id.guest_login);
-
-		if (true) {
-			authButton.setVisibility(View.GONE);
-			guestLogin.setVisibility(View.GONE);
+		
+		
 			Runnable r = new Runnable() {
 				@Override
 				public void run() {
@@ -75,12 +68,9 @@ public class Splash extends Activity implements OnClickListener {
 			handler.postDelayed(r, 1500);
 		}
 
-		else {
-			authButton.setOnClickListener(this);
-			guestLogin.setOnClickListener(this);
-		}
+		
 
-	}
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -95,31 +85,7 @@ public class Splash extends Activity implements OnClickListener {
 	
 	}
 
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.authButton:
-			if (cache.facebook.isSessionValid()) {
-				Intent intent = new Intent(mContext, Home.class);
-				startActivity(intent);
-				finish();
-				SharedResources.facebookLogin = true;
-			} else
-				loginToFb();
-			break;
-		case R.id.guest_login:
-			Intent intent = new Intent(mContext, Home.class);
-			startActivity(intent);
-			finish();
-
-			SharedResources.facebookLogin = false;
-			break;
-
-		default:
-			break;
-		}
-	}
-
+	
 	@Override
 	public void onConfigurationChanged(
 			android.content.res.Configuration newConfig) {
