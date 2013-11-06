@@ -39,16 +39,16 @@ public class Splash extends Activity {
 		switch (getResources().getConfiguration().orientation) {
 		case Configuration.ORIENTATION_LANDSCAPE:
 			setContentView(R.layout.activity_splash2);
-			ImageView logo = (ImageView) findViewById(R.id.logo);
+/*			ImageView logo = (ImageView) findViewById(R.id.logo);
 			logo.getLayoutParams().height = (int) (0.9 * height);
-			logo.getLayoutParams().width = (int) (0.9 * height);
+			logo.getLayoutParams().width = (int) (0.9 * height);*/
 
 			break;
 		default:
 			setContentView(R.layout.activity_splash);
-			logo = (ImageView) findViewById(R.id.logo);
+			/*logo = (ImageView) findViewById(R.id.logo);
 			logo.getLayoutParams().height = (int) (0.4 * height);
-			logo.getLayoutParams().width = (int) (0.4 * height);
+			logo.getLayoutParams().width = (int) (0.4 * height);*/
 
 			break;
 		}

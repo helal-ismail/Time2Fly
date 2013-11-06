@@ -1,4 +1,4 @@
- package com.ui;
+package com.ui;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationListener;
@@ -66,12 +67,12 @@ import com.shared.SharedResources;
 
 public class Home extends FragmentActivity {
 	Time2FlyApp appInstance;
-	Context mContext = this;	
+	Context mContext = this;
 	GoogleMap googleMap;
 	CacheManager cache = CacheManager.getInstance();
 	T2FClickListener listener;
 	ImageLoader imgLoader = new ImageLoader(mContext);
-	
+
 	Runnable refreshValsRunnable = new Runnable() {
 		@Override
 		public void run() {
@@ -87,29 +88,25 @@ public class Home extends FragmentActivity {
 			task.execute();
 		}
 	};
-	
-	
-	private void initUI(){
+
+	private void initUI() {
 		setContentView(R.layout.activity_home);
 		SharedLayouts.initLayouts(this);
 		SharedResources.mAnimations = new MyAnimations(mContext);
 		listener = new T2FClickListener(mContext);
-		
+
 		int width = getWindowManager().getDefaultDisplay().getWidth();
 		int height = getWindowManager().getDefaultDisplay().getHeight();
 		int w = Utils.getInstance().getPanelWidth(width, height);
-		SharedLayouts.leftSection.getLayoutParams().width = w ;
-		
-		//SharedLayouts.sideTray.setOnClickListener(listener);
+		SharedLayouts.leftSection.getLayoutParams().width = w;
+
+		// SharedLayouts.sideTray.setOnClickListener(listener);
 		SharedLayouts.searchButton.setOnClickListener(listener);
 		SharedLayouts.back.setOnClickListener(listener);
-	
-		
+
 		cache.tabs_hash.clear();
 		SharedLayouts.drawer.removeAllViews();
 
-		
-		
 	}
 
 	@Override
@@ -119,11 +116,11 @@ public class Home extends FragmentActivity {
 		initUI();
 		initActionBar();
 		appInstance = (Time2FlyApp) getApplication();
-		
+
 		initGoogleMap();
 		cache.cyclesCount = 0;
-		Toast.makeText(mContext, "Loading flights data", Toast.LENGTH_LONG).show();
-
+		Toast.makeText(mContext, "Loading flights data", Toast.LENGTH_LONG)
+				.show();
 
 		// Call the 1st JSON Update
 		runOnUiThread(refreshValsRunnable);
@@ -133,30 +130,27 @@ public class Home extends FragmentActivity {
 			WeatherTask task = new WeatherTask();
 			task.execute();
 		}
+		 
 
-		
 	}
 
 	@Override
 	public void onBackPressed() {
-		
-		if(SharedLayouts.drawer2.getVisibility() == View.VISIBLE)
-		{
+
+		if (SharedLayouts.drawer2.getVisibility() == View.VISIBLE) {
 			SharedLayouts.drawer2.setVisibility(View.GONE);
 			SharedLayouts.drawer1.setVisibility(View.VISIBLE);
 		}
-		
-		else
-		{
-		weatherTask.cancel();
-		SharedResources.timer.cancel();
-		SharedResources.timer.purge();
-		BugSenseHandler.closeSession(this);
-		finish();
-		android.os.Process.killProcess(android.os.Process.myPid());
+
+		else {
+			weatherTask.cancel();
+			SharedResources.timer.cancel();
+			SharedResources.timer.purge();
+			BugSenseHandler.closeSession(this);
+			finish();
+			android.os.Process.killProcess(android.os.Process.myPid());
 		}
 	};
-	
 
 	private void initGoogleMap() {
 		googleMap = ((SupportMapFragment) (getSupportFragmentManager()
@@ -165,16 +159,20 @@ public class Home extends FragmentActivity {
 		googleMap.getUiSettings().setCompassEnabled(true);
 		googleMap.getUiSettings().setZoomControlsEnabled(true);
 		googleMap.setMyLocationEnabled(true);
-		googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(SharedResources.hkLatLng, 9));
+		googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+				SharedResources.hkLatLng, 9));
 
 		googleMap.addMarker(new MarkerOptions()
 				.icon(BitmapDescriptorFactory.fromResource(R.drawable.hk_flag))
-				.anchor((float) 0.5, (float) 0.5).position(SharedResources.hkLatLng)
+				.anchor((float) 0.5, (float) 0.5)
+				.position(SharedResources.hkLatLng)
 				.title("Hong Kong International Airport"));
 
+		
+		
 		cache.currentLoc.setLatitude(SharedResources.hkLatLng.latitude);
 		cache.currentLoc.setLongitude(SharedResources.hkLatLng.longitude);
-
+		
 		Location myLoc = getCurrentLocation();
 		if (myLoc != null && !appInstance.isHomeHK()) {
 			Log.d(Constants.TAG,
@@ -228,51 +226,47 @@ public class Home extends FragmentActivity {
 				return false;
 			}
 		});
-		
-		
+
 		googleMap.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
 			@Override
 			public void onInfoWindowClick(Marker marker) {
-				String title = marker.getTitle();
+				SharedLayouts.drawer.setVisibility(View.VISIBLE);
 				SharedLayouts.drawer1.setVisibility(View.GONE);
 				SharedLayouts.drawer2.setVisibility(View.VISIBLE);
-				
+
 				Tab tab = cache.tabs_hash.get(cache.selectedReg);
 				updateDetailedView(tab, "");
-				
 			}
 		});
 
 	}
 
 	private void updateBearing() {
-		
-		//COMMENT HERE
-		
-		Object[] tabs = cache.tabs_hash.exportSortedList(cache.tabs_hash.values().toArray());
+
+		// COMMENT HERE
+
+		Object[] tabs = cache.tabs_hash.exportSortedList(cache.tabs_hash
+				.values().toArray());
 		for (int i = 0; i < tabs.length; i++) {
 			Tab tab = (Tab) tabs[i];
 			Bitmap bmp = BitmapFactory.decodeResource(getResources(), Utils
 					.getInstance().getResourceID(tab));
-			bmp = Utils.getInstance()
-					.rotateImage(bmp, tab.track, SharedResources.bearing_angle);
+			bmp = Utils.getInstance().rotateImage(bmp, tab.track,
+					SharedResources.bearing_angle);
 			tab.marker.setIcon(BitmapDescriptorFactory.fromBitmap(bmp));
 		}
 	}
-	
-	
-	
-	public void renderAfterSearch()
-	{
+
+	public void renderAfterSearch() {
 		clearMap();
 		renderTargets();
 	}
-	private void clearMap(){
+
+	private void clearMap() {
 		Object[] tabs = cache.tabs_hash.values().toArray();
-		for(int i = 0 ; i < tabs.length ; i ++)
-		{
-			Tab t = (Tab)tabs[i];
-			if(t.marker != null){
+		for (int i = 0; i < tabs.length; i++) {
+			Tab t = (Tab) tabs[i];
+			if (t.marker != null) {
 				t.marker.remove();
 				t.marker = null;
 			}
@@ -280,21 +274,19 @@ public class Home extends FragmentActivity {
 	}
 
 	private void renderTargets() {
-		SharedResources.localTime = new Date();
-		String txt = SharedResources.localTime.toLocaleString();
-		SharedLayouts.timeLabel.setText(txt);
 		cache.num_targets = 0;
 		Object[] tabs;
-		if(!SharedResources.searchFilter)
-			tabs = cache.tabs_hash.exportSortedList(cache.tabs_hash.values().toArray());
-		else
-		{
+		if (!SharedResources.searchFilter)
+			tabs = cache.tabs_hash.exportSortedList(cache.tabs_hash.values()
+					.toArray());
+		else {
 			// CLEAR GOOGLE MAP HERE
-			String regex = SharedLayouts.searchField.getEditableText().toString();
+			String regex = SharedLayouts.searchField.getEditableText()
+					.toString();
 			tabs = cache.tabs_hash.search(regex);
 			tabs = cache.tabs_hash.exportSortedList(tabs);
 		}
-		
+
 		Tab selectedTab = null;
 		String selectedDest = "";
 
@@ -312,8 +304,8 @@ public class Home extends FragmentActivity {
 			LatLng latLng = new LatLng(tab.lat, tab.lon);
 			Bitmap bmp = BitmapFactory.decodeResource(getResources(), Utils
 					.getInstance().getResourceID(tab));
-			bmp = Utils.getInstance()
-					.rotateImage(bmp, tab.track, SharedResources.bearing_angle);
+			bmp = Utils.getInstance().rotateImage(bmp, tab.track,
+					SharedResources.bearing_angle);
 
 			float alt = ((int) tab.alt) / 100;
 			int altitude = Math.round(alt);
@@ -341,14 +333,16 @@ public class Home extends FragmentActivity {
 
 			float distance = loc.distanceTo(cache.currentLoc) / 1000;
 			distance = (float) (Math.round(distance * 20.0) / 20.0);
-			String snippet = tab.type + "  " + tab.spd + "Kts" ;
+			String snippet = tab.type + "  " + tab.spd + "Kts";
 
 			String dist = distance + "Km  " + direction;
 
 			if (tab.marker == null) {
 				tab.marker = googleMap.addMarker(new MarkerOptions()
-						.position(latLng).anchor((float) 0.5, (float) 0.5)
-						.title(tab.callSign + " " + flightLevel + " " + Utils.getInstance().getVSPD(tab.vspd))
+						.position(latLng)
+						.anchor((float) 0.5, (float) 0.5)
+						.title(tab.callSign + " " + flightLevel + " "
+								+ Utils.getInstance().getVSPD(tab.vspd))
 						.snippet(snippet)
 						.icon(BitmapDescriptorFactory.fromBitmap(bmp)));
 			} else {
@@ -365,8 +359,12 @@ public class Home extends FragmentActivity {
 				selectedTab = returnedTab;
 				selectedDest = dist;
 			}
-			
 		}
+
+		SharedResources.localTime = new Date();
+		String txt = SharedResources.localTime.toLocaleString() + "\n"
+				+ "Num flights : " + cache.num_targets;
+		SharedLayouts.timeLabel.setText(txt);
 
 		if (selectedTab != null)
 			updateDetailedView(selectedTab, selectedDest);
@@ -379,8 +377,10 @@ public class Home extends FragmentActivity {
 		final Marker marker = tab.marker;
 		Bitmap bmp = BitmapFactory.decodeResource(getResources(), Utils
 				.getInstance().getResourceID(tab));
-		bmp = Utils.getInstance().rotateImage(bmp, tab.track, SharedResources.bearing_angle);
-		marker.setTitle(tab.callSign + " " + flightLevel + " " +Utils.getInstance().getVSPD(tab.vspd));
+		bmp = Utils.getInstance().rotateImage(bmp, tab.track,
+				SharedResources.bearing_angle);
+		marker.setTitle(tab.callSign + " " + flightLevel + " "
+				+ Utils.getInstance().getVSPD(tab.vspd));
 		marker.setSnippet(snippet);
 		marker.setIcon(BitmapDescriptorFactory.fromBitmap(bmp));
 
@@ -415,19 +415,9 @@ public class Home extends FragmentActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 
-		
-//		case R.id.share:
-//			Intent intent = new Intent(mContext, Share.class);
-//			File SD = Environment.getExternalStorageDirectory();
-//			File dir = new File(SD,"Time2Fly");
-//			dir.mkdir();
-//			File exportDIR = new File(dir, "exports");
-//			exportDIR.mkdir();
-//			File file = new File(exportDIR, "t2f.jpg");
-//			intent.putExtra("path", file.getPath());
-//			startActivity(intent);
-//			break;
-		
+		case R.id.share:
+			export();
+			break;
 		case R.id.normal:
 			googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 			break;
@@ -441,14 +431,14 @@ public class Home extends FragmentActivity {
 			break;
 
 		case R.id.settings:
-		
+
 			SharedResources.timer.cancel();
 			SharedResources.timer.purge();
-			
+
 			SharedResources.weatherTimer.cancel();
 			SharedResources.weatherTimer.purge();
-			
-//			finish();
+
+			// finish();
 			Intent settings = new Intent(mContext, Settings.class);
 			startActivity(settings);
 			break;
@@ -469,34 +459,31 @@ public class Home extends FragmentActivity {
 				item.setIcon(d);
 			}
 			break;
-			
-			
+
 		case R.id.search:
-			if(SharedLayouts.searchBar.getVisibility() == View.VISIBLE){
+			if (SharedLayouts.searchBar.getVisibility() == View.VISIBLE) {
 				SharedLayouts.searchBar.setVisibility(View.GONE);
 				SharedResources.searchFilter = false;
 				renderTargets();
-			}
-			else
-			{
+			} else {
 				int width = getWindowManager().getDefaultDisplay().getWidth();
 				SharedLayouts.searchBar.setVisibility(View.VISIBLE);
-			//	SharedLayouts.searchField.getLayoutParams().width = (int)(width / 4);
-				
+				// SharedLayouts.searchField.getLayoutParams().width =
+				// (int)(width / 4);
+
 			}
 			break;
-			
+
 		case R.id.show:
-			if (SharedLayouts.leftSection.getVisibility() == View.VISIBLE)
-			{
+			if (SharedLayouts.leftSection.getVisibility() == View.VISIBLE) {
 				SharedLayouts.leftSection.setVisibility(View.GONE);
-				SharedLayouts.leftSection.startAnimation(MyAnimations.mSlideOutTop);
+				SharedLayouts.leftSection
+						.startAnimation(MyAnimations.mSlideOutTop);
 				item.setIcon(R.drawable.down);
-			}
-			else
-			{
+			} else {
 				SharedLayouts.leftSection.setVisibility(View.VISIBLE);
-				SharedLayouts.leftSection.startAnimation(MyAnimations.mSlideInTop);
+				SharedLayouts.leftSection
+						.startAnimation(MyAnimations.mSlideInTop);
 				item.setIcon(R.drawable.up);
 
 			}
@@ -541,10 +528,21 @@ public class Home extends FragmentActivity {
 							.getChildAt(i);
 					childLayout
 							.setBackgroundResource(R.drawable.rounded_border);
+					LinearLayout l = (LinearLayout) childLayout.getChildAt(0);
+					TextView tv1 = (TextView) l.getChildAt(0);
+					TextView tv2 = (TextView) l.getChildAt(1);
+					tv1.setTextColor(Color.WHITE);
+					tv2.setTextColor(Color.WHITE);
 				}
+
 				LinearLayout clickedLayout = (LinearLayout) view;
 				clickedLayout
 						.setBackgroundResource(R.drawable.rounded_border_yellow);
+				LinearLayout l = (LinearLayout) clickedLayout.getChildAt(0);
+				TextView tv1 = (TextView) l.getChildAt(0);
+				TextView tv2 = (TextView) l.getChildAt(1);
+				tv1.setTextColor(Color.GRAY);
+				tv2.setTextColor(Color.GRAY);
 
 				LatLng latLng = new LatLng(t.lat, t.lon);
 				googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
@@ -564,8 +562,11 @@ public class Home extends FragmentActivity {
 		arrow.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				/*ScrollView sv = (ScrollView) SharedLayouts.drawer.getParent();
-				sv.setVisibility(View.GONE);*/
+				/*
+				 * ScrollView sv = (ScrollView)
+				 * SharedLayouts.drawer.getParent();
+				 * sv.setVisibility(View.GONE);
+				 */
 				SharedLayouts.drawer1.setVisibility(View.GONE);
 				SharedLayouts.drawer2.setVisibility(View.VISIBLE);
 				updateDetailedView(t, distance);
@@ -587,7 +588,7 @@ public class Home extends FragmentActivity {
 	private Location getCurrentLocation() {
 
 		LocationManager mlocManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		LocationListener mlocListener = new MyLocationListener();
+		LocationListener mlocListener = new MyLocationListener(appInstance);
 		mlocManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0,
 				0, mlocListener);
 		Location loc = mlocManager
@@ -595,6 +596,8 @@ public class Home extends FragmentActivity {
 
 		return loc;
 	}
+	
+	
 
 	private void addWeatherOverlay(Bitmap bmp) {
 		if (!appInstance.isWeatheroverlayEnabled())
@@ -652,28 +655,30 @@ public class Home extends FragmentActivity {
 			root.mkdir();
 			final File appDir = new File(root, "Time2Fly");
 			appDir.mkdir();
-			
+
 			TimerTask task = new TimerTask() {
 				@Override
 				public void run() {
 					if (!SharedResources.weatherPlayed) {
 						return;
 					}
-					
-					String dirName = Utils.getInstance().getWeatherOverlayDir(cache.zoom);
-					Log.d("helal", "ZOOM :" + cache.zoom +" -- " + dirName);
+
+					String dirName = Utils.getInstance().getWeatherOverlayDir(
+							cache.zoom);
+					Log.d("helal", "ZOOM :" + cache.zoom + " -- " + dirName);
 					File dir = new File(appDir, dirName);
 					dir.mkdir();
 					final File[] files = dir.listFiles();
 					SharedResources.round_robin++;
 					if (files == null || files.length == 0)
 						return;
-					SharedResources.round_robin =SharedResources. round_robin % files.length;
+					SharedResources.round_robin = SharedResources.round_robin
+							% files.length;
 					BitmapFactory.Options opts = new Options();
 					opts.inSampleSize = 2;
 					SharedResources.weather_bmp = BitmapFactory.decodeFile(
 							files[SharedResources.round_robin].getPath(), opts);
-					
+
 					runOnUiThread(playWeatherRunnable);
 				}
 			};
@@ -688,10 +693,11 @@ public class Home extends FragmentActivity {
 			if (cache.weatherOverlay != null)
 				cache.weatherOverlay.remove();
 
-			float[] boundsArr = Utils.getInstance().getWeatherOverlayBounds(cache.zoom);
+			float[] boundsArr = Utils.getInstance().getWeatherOverlayBounds(
+					cache.zoom);
 			LatLng southwest = new LatLng(boundsArr[0], boundsArr[3]);
 			LatLng northeast = new LatLng(boundsArr[2], boundsArr[1]);
-			
+
 			float transparency = appInstance.getWeatherOverlayTransparency();
 			LatLngBounds bounds = new LatLngBounds(southwest, northeast);
 			cache.weatherOverlay = googleMap
@@ -707,29 +713,27 @@ public class Home extends FragmentActivity {
 	private void updateDetailedView(final Tab t, String distance) {
 		SharedLayouts.back.setText(cache.num_targets + " Flights Tracked");
 
-		
-		float speed_in_km = t.spd * (float)1.852;
+		float speed_in_km = t.spd * (float) 1.852;
 		Location loc = new Location("t2f");
 		loc.setAltitude(t.alt);
 		loc.setLatitude(t.lat);
 		loc.setLongitude(t.lon);
 		loc.setSpeed(speed_in_km);
-		float dist = loc.distanceTo(cache.currentLoc)/1000;
-		
-		float time = dist/speed_in_km;
-		float mins = (time % 1);		
+		float dist = loc.distanceTo(cache.currentLoc) / 1000;
+
+		float time = dist / speed_in_km;
+		float mins = (time % 1);
 		mins = mins * 60;
 
-		int minutes = (int)Math.floor(mins);
-		
+		int minutes = (int) Math.floor(mins);
+
 		String ETA = "ETA : " + minutes + " minutes";
-		
+
 		TextView tv = (TextView) findViewById(R.id.details_box);
 		String info = t.callSign + "\n" + t.spd + " Kts" + "\n" + t.vspd
-				+ " ft/min \n" + t.track + "¡" + "\n" + t.owner + "\n"
+				+ " ft/min \n" + t.track + "ï¿½" + "\n" + t.owner + "\n"
 				+ distance + "\n" + "SQ : " + t.sqw + "\n" + "Radar ID : "
-				+ t.user_id + "\n"
-				+ETA;
+				+ t.user_id + "\n" + ETA;
 		tv.setText(info);
 
 		// LatLng latLng = new LatLng(t.lat, t.lon);
@@ -745,29 +749,30 @@ public class Home extends FragmentActivity {
 		share.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
-				if(t.marker!= null)
+				if (t.marker != null)
 					t.marker.showInfoWindow();
-				
+
 				LatLng latLng = new LatLng(t.lat, t.lon);
-				googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));				
-				export();	
-				
-				/*File SD = Environment.getExternalStorageDirectory();
-				File dir = new File(SD, "Time2Fly");
-				File exports = new File(dir, "exports");
-				exports.mkdirs();
-				File file = new File(exports, "t2f.jpg");
-				Intent intent = new Intent(mContext, Share.class);
-				intent.putExtra("path", file.getPath());
-				startActivity(intent);*/
+				googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+						latLng, 13));
+				export();
+
+				/*
+				 * File SD = Environment.getExternalStorageDirectory(); File dir
+				 * = new File(SD, "Time2Fly"); File exports = new File(dir,
+				 * "exports"); exports.mkdirs(); File file = new File(exports,
+				 * "t2f.jpg"); Intent intent = new Intent(mContext,
+				 * Share.class); intent.putExtra("path", file.getPath());
+				 * startActivity(intent);
+				 */
 			}
 		});
 
-		
 		// GET URL HERE
-		ImageView imgV = (ImageView)findViewById(R.id.queried_image);
-		if(!t.imageLoaded){
-			String url = "http://www.airliners.net/search/photo.search?regsearch="+t.reg+"&distinct_entry=true";
+		ImageView imgV = (ImageView) findViewById(R.id.queried_image);
+		if (!t.imageLoaded) {
+			String url = "http://www.airliners.net/search/photo.search?regsearch="
+					+ t.reg + "&distinct_entry=true";
 			QueriedImageTask task = new QueriedImageTask();
 			task.imgLoader = imgLoader;
 			task.imgV = imgV;
@@ -778,67 +783,67 @@ public class Home extends FragmentActivity {
 		cache.selectedReg = t.addr;
 	}
 
-
 	// ====== Exporter =====
-	File newImage;	
-	private void export(){
-		File dir = new File(Environment.getExternalStorageDirectory(),"Time2Fly");
+	File newImage;
+
+	private void export() {
+		File dir = new File(Environment.getExternalStorageDirectory(),
+				"Time2Fly");
 		dir.mkdir();
 		File PhotoDir = new File(dir, "exports");
 		PhotoDir.mkdir();
 		PhotoDir.setWritable(true);
 		newImage = new File(PhotoDir, "t2f.jpg");
 		googleMap.snapshot(callBack);
-		
+
 	}
+
 	SnapshotReadyCallback callBack = new SnapshotReadyCallback() {
 		@Override
 		public void onSnapshotReady(Bitmap snapshot) {
-			try{
-			
-			FileOutputStream out;
-			out = new FileOutputStream(newImage);
-			snapshot.compress(Bitmap.CompressFormat.JPEG, 100, out);			
-			//timer.cancel();
-			//timer.purge();
-			Intent intent = new Intent(mContext, Share.class);
-			intent.putExtra("path", newImage.getPath());
-			startActivity(intent);
-		
-			
-			}
-			catch (Exception e) {
+			try {
+
+				FileOutputStream out;
+				out = new FileOutputStream(newImage);
+				snapshot.compress(Bitmap.CompressFormat.JPEG, 100, out);
+				// timer.cancel();
+				// timer.purge();
+				Intent intent = new Intent(mContext, Share.class);
+				intent.putExtra("path", newImage.getPath());
+				startActivity(intent);
+
+			} catch (Exception e) {
 				Log.d(Constants.TAG, "Snapshot fialed");
 			}
 		}
 	};
 
 	@Override
-	public void onConfigurationChanged(android.content.res.Configuration newConfig) {
+	public void onConfigurationChanged(
+			android.content.res.Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
 		int width = getWindowManager().getDefaultDisplay().getWidth();
 		int height = getWindowManager().getDefaultDisplay().getHeight();
 		int w = Utils.getInstance().getPanelWidth(width, height);
-		
-		LinearLayout leftSection = (LinearLayout)findViewById(R.id.left_section);
-		leftSection.getLayoutParams().width =  w ;
 
-		
-		//SharedLayouts.searchField.getLayoutParams().width = (int)(width / 4);
-		TextView detailsBox = (TextView)findViewById(R.id.details_box);
-		Button btn = (Button)findViewById(R.id.back);
-////		switch (getResources().getConfiguration().orientation) {
-////		case Configuration.ORIENTATION_LANDSCAPE:
-////			detailsBox.setTextSize(12);
-////			btn.setTextSize(12);
-////			break;
-////		default:
-////			detailsBox.setTextSize(8);
-////			btn.setTextSize(8);
-////			break;
-//		}
+		LinearLayout leftSection = (LinearLayout) findViewById(R.id.left_section);
+		leftSection.getLayoutParams().width = w;
+
+		// SharedLayouts.searchField.getLayoutParams().width = (int)(width / 4);
+		TextView detailsBox = (TextView) findViewById(R.id.details_box);
+		Button btn = (Button) findViewById(R.id.back);
+		// // switch (getResources().getConfiguration().orientation) {
+		// // case Configuration.ORIENTATION_LANDSCAPE:
+		// // detailsBox.setTextSize(12);
+		// // btn.setTextSize(12);
+		// // break;
+		// // default:
+		// // detailsBox.setTextSize(8);
+		// // btn.setTextSize(8);
+		// // break;
+		// }
 	};
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
