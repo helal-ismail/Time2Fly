@@ -1,0 +1,73 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Home" >
+
+    <LinearLayout
+        android:id="@+id/name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/search" />
+
+        <EditText
+            android:id="@+id/search_field"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="Search by name" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/tag"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/tag" />
+
+        <EditText
+            android:id="@+id/tag_field"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="tag number" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/secret_code"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/lock" />
+
+        <EditText
+            android:id="@+id/secret_code_field"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="secret code" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/listview"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="2dp" >
+    </ListView>
+
+</LinearLayout>
