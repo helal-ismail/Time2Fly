@@ -230,10 +230,15 @@ public class Home extends FragmentActivity {
 		googleMap.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
 			@Override
 			public void onInfoWindowClick(Marker marker) {
-				SharedLayouts.drawer.setVisibility(View.VISIBLE);
+
+				SharedLayouts.leftSection.setVisibility(View.VISIBLE);
+				SharedLayouts.leftSection.startAnimation(MyAnimations.mSlideInTop);
 				SharedLayouts.drawer1.setVisibility(View.GONE);
 				SharedLayouts.drawer2.setVisibility(View.VISIBLE);
-
+				
+				ImageView imgV = (ImageView) findViewById(R.id.queried_image);
+				imgV.setImageResource(R.drawable.loading);				
+				
 				Tab tab = cache.tabs_hash.get(cache.selectedReg);
 				updateDetailedView(tab, "");
 			}
@@ -460,19 +465,19 @@ public class Home extends FragmentActivity {
 			}
 			break;
 
-		case R.id.search:
-			if (SharedLayouts.searchBar.getVisibility() == View.VISIBLE) {
-				SharedLayouts.searchBar.setVisibility(View.GONE);
-				SharedResources.searchFilter = false;
-				renderTargets();
-			} else {
-				int width = getWindowManager().getDefaultDisplay().getWidth();
-				SharedLayouts.searchBar.setVisibility(View.VISIBLE);
-				// SharedLayouts.searchField.getLayoutParams().width =
-				// (int)(width / 4);
-
-			}
-			break;
+//		case R.id.search:
+//			if (SharedLayouts.searchBar.getVisibility() == View.VISIBLE) {
+//				SharedLayouts.searchBar.setVisibility(View.GONE);
+//				SharedResources.searchFilter = false;
+//				renderTargets();
+//			} else {
+//				int width = getWindowManager().getDefaultDisplay().getWidth();
+//				SharedLayouts.searchBar.setVisibility(View.VISIBLE);
+//				// SharedLayouts.searchField.getLayoutParams().width =
+//				// (int)(width / 4);
+//
+//			}
+//			break;
 
 		case R.id.show:
 			if (SharedLayouts.leftSection.getVisibility() == View.VISIBLE) {
@@ -569,6 +574,9 @@ public class Home extends FragmentActivity {
 				 */
 				SharedLayouts.drawer1.setVisibility(View.GONE);
 				SharedLayouts.drawer2.setVisibility(View.VISIBLE);
+				
+				ImageView imgV = (ImageView) findViewById(R.id.queried_image);
+				imgV.setImageResource(R.drawable.loading);
 				updateDetailedView(t, distance);
 				LatLng latLng = new LatLng(t.lat, t.lon);
 				googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
@@ -731,7 +739,7 @@ public class Home extends FragmentActivity {
 
 		TextView tv = (TextView) findViewById(R.id.details_box);
 		String info = t.callSign + "\n" + t.spd + " Kts" + "\n" + t.vspd
-				+ " ft/min \n" + t.track + "ï¿½" + "\n" + t.owner + "\n"
+				+ " ft/min \n" + t.track + "¡" + "\n" + t.owner + "\n"
 				+ distance + "\n" + "SQ : " + t.sqw + "\n" + "Radar ID : "
 				+ t.user_id + "\n" + ETA;
 		tv.setText(info);
