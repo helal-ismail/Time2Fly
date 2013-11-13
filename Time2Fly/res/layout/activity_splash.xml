@@ -18,8 +18,9 @@
         android:textStyle="bold" />
 
     <TextView
-        android:layout_width="500dp"
-        android:layout_height="300dp"
+        android:id="@+id/splash_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:background="@drawable/flight"
         android:gravity="center_horizontal"

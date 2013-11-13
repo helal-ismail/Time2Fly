@@ -107,6 +107,9 @@ public class Home extends FragmentActivity {
 		cache.tabs_hash.clear();
 		SharedLayouts.drawer.removeAllViews();
 
+		SharedLayouts.queriedImage.getLayoutParams().width = (int) (w * 0.9);
+		SharedLayouts.queriedImage.getLayoutParams().height = (int) (w * 0.9);
+
 	}
 
 	@Override
@@ -130,7 +133,6 @@ public class Home extends FragmentActivity {
 			WeatherTask task = new WeatherTask();
 			task.execute();
 		}
-		 
 
 	}
 
@@ -168,11 +170,9 @@ public class Home extends FragmentActivity {
 				.position(SharedResources.hkLatLng)
 				.title("Hong Kong International Airport"));
 
-		
-		
 		cache.currentLoc.setLatitude(SharedResources.hkLatLng.latitude);
 		cache.currentLoc.setLongitude(SharedResources.hkLatLng.longitude);
-		
+
 		Location myLoc = getCurrentLocation();
 		if (myLoc != null && !appInstance.isHomeHK()) {
 			Log.d(Constants.TAG,
@@ -203,10 +203,17 @@ public class Home extends FragmentActivity {
 			@Override
 			public boolean onMarkerClick(Marker marker) {
 				String title = marker.getTitle();
-				for (int i = 0; i < SharedLayouts.drawer.getChildCount(); i++)
+				for (int i = 0; i < SharedLayouts.drawer.getChildCount(); i++) {
 					SharedLayouts.drawer.getChildAt(i).setBackgroundResource(
 							R.drawable.rounded_border);
-
+					LinearLayout child = (LinearLayout) SharedLayouts.drawer
+							.getChildAt(i);
+					LinearLayout l = (LinearLayout) child.getChildAt(0);
+					TextView tv1 = (TextView) l.getChildAt(0);
+					TextView tv2 = (TextView) l.getChildAt(1);
+					tv1.setTextColor(Color.WHITE);
+					tv2.setTextColor(Color.WHITE);
+				}
 				int layoutIndex = cache.tabs_hash.searchByTitle(title);
 				if (layoutIndex > -1) {
 					LinearLayout selectedLayout = (LinearLayout) SharedLayouts.drawer
@@ -214,6 +221,13 @@ public class Home extends FragmentActivity {
 					if (selectedLayout != null) {
 						selectedLayout
 								.setBackgroundResource(R.drawable.rounded_border_yellow);
+						LinearLayout l = (LinearLayout) selectedLayout
+								.getChildAt(0);
+
+						TextView tv1 = (TextView) l.getChildAt(0);
+						TextView tv2 = (TextView) l.getChildAt(1);
+						tv1.setTextColor(Color.GRAY);
+						tv2.setTextColor(Color.GRAY);
 						String addr = (String) selectedLayout.getTag();
 						cache.selectedReg = addr;
 						Tab t = cache.tabs_hash.get(addr);
@@ -232,13 +246,14 @@ public class Home extends FragmentActivity {
 			public void onInfoWindowClick(Marker marker) {
 
 				SharedLayouts.leftSection.setVisibility(View.VISIBLE);
-				SharedLayouts.leftSection.startAnimation(MyAnimations.mSlideInTop);
+				SharedLayouts.leftSection
+						.startAnimation(MyAnimations.mSlideInTop);
 				SharedLayouts.drawer1.setVisibility(View.GONE);
 				SharedLayouts.drawer2.setVisibility(View.VISIBLE);
-				
+
 				ImageView imgV = (ImageView) findViewById(R.id.queried_image);
-				imgV.setImageResource(R.drawable.loading);				
-				
+				imgV.setImageResource(R.drawable.loading);
+
 				Tab tab = cache.tabs_hash.get(cache.selectedReg);
 				updateDetailedView(tab, "");
 			}
@@ -465,19 +480,19 @@ public class Home extends FragmentActivity {
 			}
 			break;
 
-//		case R.id.search:
-//			if (SharedLayouts.searchBar.getVisibility() == View.VISIBLE) {
-//				SharedLayouts.searchBar.setVisibility(View.GONE);
-//				SharedResources.searchFilter = false;
-//				renderTargets();
-//			} else {
-//				int width = getWindowManager().getDefaultDisplay().getWidth();
-//				SharedLayouts.searchBar.setVisibility(View.VISIBLE);
-//				// SharedLayouts.searchField.getLayoutParams().width =
-//				// (int)(width / 4);
-//
-//			}
-//			break;
+		// case R.id.search:
+		// if (SharedLayouts.searchBar.getVisibility() == View.VISIBLE) {
+		// SharedLayouts.searchBar.setVisibility(View.GONE);
+		// SharedResources.searchFilter = false;
+		// renderTargets();
+		// } else {
+		// int width = getWindowManager().getDefaultDisplay().getWidth();
+		// SharedLayouts.searchBar.setVisibility(View.VISIBLE);
+		// // SharedLayouts.searchField.getLayoutParams().width =
+		// // (int)(width / 4);
+		//
+		// }
+		// break;
 
 		case R.id.show:
 			if (SharedLayouts.leftSection.getVisibility() == View.VISIBLE) {
@@ -524,6 +539,11 @@ public class Home extends FragmentActivity {
 					item.setBackgroundResource(R.drawable.rounded_border);
 					cache.selectedReg = "";
 					t.marker.hideInfoWindow();
+					LinearLayout l = (LinearLayout) item.getChildAt(0);
+					TextView tv1 = (TextView) l.getChildAt(0);
+					TextView tv2 = (TextView) l.getChildAt(1);
+					tv1.setTextColor(Color.WHITE);
+					tv2.setTextColor(Color.WHITE);
 					return;
 
 				}
@@ -574,7 +594,7 @@ public class Home extends FragmentActivity {
 				 */
 				SharedLayouts.drawer1.setVisibility(View.GONE);
 				SharedLayouts.drawer2.setVisibility(View.VISIBLE);
-				
+
 				ImageView imgV = (ImageView) findViewById(R.id.queried_image);
 				imgV.setImageResource(R.drawable.loading);
 				updateDetailedView(t, distance);
@@ -604,8 +624,6 @@ public class Home extends FragmentActivity {
 
 		return loc;
 	}
-	
-	
 
 	private void addWeatherOverlay(Bitmap bmp) {
 		if (!appInstance.isWeatheroverlayEnabled())

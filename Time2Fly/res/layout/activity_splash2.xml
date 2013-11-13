@@ -20,7 +20,7 @@
             android:padding="5dp"
             android:text="A D S - B"
             android:textColor="#ffd700"
-            android:textSize="65sp"
+            android:textSize="60sp"
             android:textStyle="bold" />
 
         <ImageView

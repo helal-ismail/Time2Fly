@@ -8,10 +8,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bugsense.trace.BugSenseHandler;
@@ -23,54 +20,43 @@ import com.facebook.android.DialogError;
 import com.facebook.android.Facebook;
 import com.facebook.android.Facebook.DialogListener;
 import com.facebook.android.FacebookError;
-import com.facebook.widget.LoginButton;
 import com.shared.SharedResources;
 
 public class Splash extends Activity {
 	Context mContext = this;
 	Time2FlyApp appInstance;
 	ProgressDialog fbLoginDialog = null;
-	
+
 	CacheManager cache = CacheManager.getInstance();
 
 	private void initUI() {
 		int height = getWindowManager().getDefaultDisplay().getHeight();
+		int width = getWindowManager().getDefaultDisplay().getWidth();
 
 		switch (getResources().getConfiguration().orientation) {
 		case Configuration.ORIENTATION_LANDSCAPE:
 			setContentView(R.layout.activity_splash2);
-/*			ImageView logo = (ImageView) findViewById(R.id.logo);
-			logo.getLayoutParams().height = (int) (0.9 * height);
-			logo.getLayoutParams().width = (int) (0.9 * height);*/
-
 			break;
 		default:
 			setContentView(R.layout.activity_splash);
-			/*logo = (ImageView) findViewById(R.id.logo);
-			logo.getLayoutParams().height = (int) (0.4 * height);
-			logo.getLayoutParams().width = (int) (0.4 * height);*/
-
+			TextView splash_image = (TextView) findViewById(R.id.splash_image);
+			splash_image.getLayoutParams().height = (int) (0.8 * width);
+			splash_image.getLayoutParams().width = (int) (0.8 * width);
 			break;
 		}
-		
-		
-			Runnable r = new Runnable() {
-				@Override
-				public void run() {
-					Intent intent = new Intent(mContext, Home.class);
-					startActivity(intent);
-					finish();
 
-					  SharedResources.facebookLogin = false;
-				}
-			};
-			Handler handler = new Handler();
-			handler.postDelayed(r, 1500);
-		}
-
-		
-
-	
+		Runnable r = new Runnable() {
+			@Override
+			public void run() {
+				Intent intent = new Intent(mContext, Home.class);
+				startActivity(intent);
+				finish();
+				SharedResources.facebookLogin = false;
+			}
+		};
+		Handler handler = new Handler();
+		handler.postDelayed(r, 1500);
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,10 +68,8 @@ public class Splash extends Activity {
 
 		initUI();
 
-	
 	}
 
-	
 	@Override
 	public void onConfigurationChanged(
 			android.content.res.Configuration newConfig) {
@@ -145,7 +129,4 @@ public class Splash extends Activity {
 		}
 	}
 
-	
-	
-	
 }

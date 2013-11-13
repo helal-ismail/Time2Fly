@@ -1,8 +1,10 @@
 package com.shared;
 
 import android.app.Activity;
+import android.webkit.WebView.FindListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -23,6 +25,7 @@ public class SharedLayouts {
 	public static EditText searchField;
 	
 	public static TextView timeLabel;
+	public static ImageView queriedImage;
 	
 	public static void initLayouts(Activity mContext){
 	
@@ -39,6 +42,7 @@ public class SharedLayouts {
 		searchField = (EditText)mContext.findViewById(R.id.search_field);
 		
 		timeLabel = (TextView)mContext.findViewById(R.id.time_label);
+		queriedImage = (ImageView)mContext.findViewById(R.id.queried_image);
 	}
 
 }
